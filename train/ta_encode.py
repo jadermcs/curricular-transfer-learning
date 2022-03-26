@@ -12,8 +12,8 @@ torch.manual_seed(0)
 def main(raw_args=None):
     parser = argparse.ArgumentParser(description="Finetune a transformers "
                                     "model on a causal language modeling task")
-    parser.add_argument("--directory", type=str, help="A path to save model.")
-    parser.add_argument("--checkpoint", type=str, help="A path for initial model.")
+    parser.add_argument("--directory", type=str, required=True, help="A path to save model.")
+    parser.add_argument("--checkpoint", type=str, required=True,  help="A path for initial model.")
     parser.add_argument("--subset", type=str, help="The subset of multiwoz to train.")
     parser.add_argument("--batch_size", type=int, default=8,
         help="Size of the batch.")
@@ -40,8 +40,6 @@ def main(raw_args=None):
 
     tokenizer = GPT2Tokenizer.from_pretrained(args.checkpoint)
     model = GPT2LMHeadModel.from_pretrained(args.checkpoint)
-
-    train_files, validation_files = train_test_split(glob.glob(files), test_size=0.1)
 
     datasets = load_dataset("parquet", data_files={"train": train_files,
                                                 "validation": validation_files},

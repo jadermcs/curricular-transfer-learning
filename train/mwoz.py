@@ -1,20 +1,49 @@
 #!/usr/bin/env python
 # coding=utf-8
+import json
 import torch
 import argparse
 from torch.utils.data import Dataset, DataLoader
 from transformers import GPT2Tokenizer, GPT2LMHeadModel
 from transformers import Trainer, TrainingArguments
-from datasets import load_dataset
+from transformers import SchedulerType
 
 torch.manual_seed(0)
+
+def get_special_tokens(exclude_domain=None):
+    base = ["<sos_u>", "<eos_u>", "<sos_b>", "<eos_b>", "<sos_r>", "<eos_r>"]
+    with open("data/schema.json") as fin:
+        data = json.load(fin)
+    for domain in data:
+        if domain == exclude_domain:
+            continue
+        for value in data[domain]["slots"]:
+            base.append("<"+value["name"]+">")
+        for value in data[domain]["intents"]:
+            base.append("["+value["name"]+"]")
+    return base
+
+class MwozDataset(Dataset):
+    def __init__(self, datapath, domain=None):
+        with open(datapath) as fin:
+            mdict = json.load(fin)
+        self.data = {k: v for (k, v) in mdict.items() if not domain or domain not in v["domain"]}
+        self.keys = self.data.keys()
+
+    def __len__(self):
+        return len(self.keys)
+
+    def __getitem__(self, idx):
+        key = self.keys[idx]
+        return self.data[key]["text"]
+
 
 def main(raw_args=None):
     parser = argparse.ArgumentParser(description="Finetune a transformers "
                                     "model on a causal language modeling task")
     parser.add_argument("--directory", type=str, help="A path to save model.")
     parser.add_argument("--checkpoint", type=str, help="A path for initial model.")
-    parser.add_argument("--subset", type=str, help="The subset of multiwoz to train.")
+    parser.add_argument("--domain", type=str, help="The subset of multiwoz to train.")
     parser.add_argument("--batch_size", type=int, default=8,
         help="Size of the batch.")
     parser.add_argument("--train_file", type=str, default="data/process.train.json",
@@ -41,22 +70,16 @@ def main(raw_args=None):
     tokenizer = GPT2Tokenizer.from_pretrained(args.checkpoint)
     model = GPT2LMHeadModel.from_pretrained(args.checkpoint)
 
-    train_files, validation_files = train_test_split(glob.glob(files), test_size=0.1)
+    train_data = MwozDataset("data/multiwoz/train/encoded.json")
+    valid_data = MwozDataset("data/multiwoz/dev/encoded.json")
 
-    datasets = load_dataset("parquet", data_files={"train": train_files,
-                                                "validation": validation_files},
-                            cache_dir="proc_data")
-    print("Filtering data.")
-    datasets = datasets.filter(
-        lambda x: x['text'].endswith((".", "?", "!")) and\
-        x['reply'].endswith((".", "?", "!")))
+    train_dataloader = DataLoader(train_data, batch_size=64, shuffle=True)
+    valid_dataloader = DataLoader(valid_data, batch_size=64, shuffle=True)
 
-    special_tokens = ["<sos_u>", "<eos_u>",
-                    "<sos_b>", "<eos_b>",
-                    "<sos_r>", "<eos_r>"]
+    special_tokens = get_special_tokens(args.domain)
+    
     tokenizer.add_special_tokens({'additional_special_tokens': special_tokens})
     model.resize_token_embeddings(len(tokenizer))
-    tokenizer.save_pretrained("models/forums_tokenizer")
 
     column_names = datasets["train"].column_names
 
@@ -90,8 +113,8 @@ def main(raw_args=None):
     trainer = Trainer(
         model=model,
         args=training_args,
-        train_dataset=datasets["train"],
-        eval_dataset=datasets["validation"],
+        train_dataset=train_dataloader,
+        eval_dataset=valid_dataloader,
     )
 
     trainer.train()

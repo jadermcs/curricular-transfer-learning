@@ -2,6 +2,7 @@
 # coding=utf-8
 import torch
 import argparse
+from itertools import chain
 from torch.utils.data import Dataset, DataLoader
 from transformers import GPT2Tokenizer, GPT2LMHeadModel
 from transformers import Trainer, TrainingArguments
@@ -69,6 +70,25 @@ def main(raw_args=None):
         batched=True,
         num_proc=4,
         remove_columns=column_names,
+    )
+
+    def group_texts(examples):
+        concatenated_examples = {k: list(chain(*examples[k])) for k in examples.keys()}
+        total_length = len(concatenated_examples[list(examples.keys())[0]])
+        if total_length >= block_size:
+            total_length = (total_length // block_size) * block_size
+        result = {
+            k: [t[i : i + block_size] for i in range(0, total_length, block_size)]
+            for k, t in concatenated_examples.items()
+        }
+        result["labels"] = result["input_ids"].copy()
+        return result
+
+    print("Grouping data.")
+    lm_datasets = datasets.map(
+        group_texts,
+        batched=True,
+        num_proc=4,
     )
 
     training_args = TrainingArguments(
