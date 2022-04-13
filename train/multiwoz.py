@@ -71,7 +71,7 @@ def main(raw_args=None):
     def tokenizer_function(examples):
         res = tokenizer(examples["text"], truncation=True, padding="max_length", max_length=512)
         res['labels'] = res['input_ids']
-        return tokenizer(examples["text"], truncation=True, padding="max_length", max_length=512)
+        return res
 
     column_names = datasets["train"].column_names
 
