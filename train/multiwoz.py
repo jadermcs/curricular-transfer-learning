@@ -41,10 +41,8 @@ def main(raw_args=None):
         help="Initial learning rate to use.")
     parser.add_argument("--weight_decay", type=float, default=0.1,
         help="Weight decay to use.")
-    parser.add_argument("--num_train_epochs", type=int, default=None,
+    parser.add_argument("--num_train_epochs", type=int, default=100,
         help="Total number of training epochs to perform.")
-    parser.add_argument("--max_train_steps", type=int, default=None,
-        help="Total number of training steps to perform.")
     parser.add_argument("--gradient_accumulation_steps", type=int, default=8,
         help="Number of updates steps to accumulate for a backward/update pass.")
     parser.add_argument("--num_warmup_steps", type=int, default=1,
