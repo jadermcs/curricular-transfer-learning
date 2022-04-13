@@ -10,13 +10,11 @@ from datasets import load_dataset
 
 torch.manual_seed(0)
 
-def get_special_tokens(exclude_domain=None):
+def get_special_tokens():
     base = ["<sos_u>", "<eos_u>", "<sos_b>", "<eos_b>", "<sos_r>", "<eos_r>"]
     with open("data/multiwoz/schema.json") as fin:
         data = json.load(fin)
     for domain in data:
-        if domain != exclude_domain:
-            continue
         for value in data[domain]["slots"]:
             base.append("<"+value["name"]+">")
         for value in data[domain]["intents"]:
@@ -59,7 +57,7 @@ def main(raw_args=None):
 
     datasets = datasets
 
-    special_tokens = get_special_tokens(args.domain)
+    special_tokens = get_special_tokens()
 
     tokenizer.add_special_tokens({'additional_special_tokens': special_tokens})
     tokenizer.pad_token = tokenizer.eos_token
