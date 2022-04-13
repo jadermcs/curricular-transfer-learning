@@ -9,15 +9,19 @@ from transformers import Trainer, TrainingArguments
 from datasets import load_dataset
 
 torch.manual_seed(0)
+SEED = 42
 
 def get_special_tokens():
-    base = ["<sos_u>", "<eos_u>", "<sos_b>", "<eos_b>", "<sos_r>", "<eos_r>"]
+    base = ["<sos_u>", "<eos_u>", "<sos_b>", "<eos_b>",
+            "<sos_a>", "<eos_a>", "<sos_r>", "<eos_r>"]
     with open("data/multiwoz/schema.json") as fin:
         data = json.load(fin)
     for domain in data:
-        for value in data[domain]["slots"]:
-            base.append("<"+value["name"]+">")
-        for value in data[domain]["intents"]:
+        for value in domain["slots"]:
+            name = "<"+value["name"].split('-')[-1]+">"
+            if name not in base:
+                base.append(name)
+        for value in domain["intents"]:
             base.append("["+value["name"]+"]")
     return base
 
@@ -50,12 +54,15 @@ def main(raw_args=None):
     tokenizer = GPT2Tokenizer.from_pretrained(args.checkpoint)
     model = GPT2LMHeadModel.from_pretrained(args.checkpoint)
 
-    datasets = load_dataset("json", split=f"train[:{args.percent}%]+valid", data_files={
+    datasets = load_dataset("json", data_files={
         "train": "data/multiwoz/train/encoded.json",
         "valid": "data/multiwoz/dev/encoded.json"
     })
 
-    datasets = datasets
+    datasets = datasets.shuffle(seed=SEED)
+    if args.percent:
+        size = (len(datasets["train"]) * args.percent) // 100
+        datasets["train"] = datasets["train"].select(range(size))
 
     special_tokens = get_special_tokens()
 
