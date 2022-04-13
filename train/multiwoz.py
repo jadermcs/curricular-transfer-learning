@@ -31,7 +31,7 @@ def main(raw_args=None):
     parser.add_argument("--directory", type=str, required=True, help="A path to save model.")
     parser.add_argument("--checkpoint", type=str, required=True, help="A path for initial model.")
     parser.add_argument("--percent", type=int, default=100, help="The subset of multiwoz to train.")
-    parser.add_argument("--batch_size", type=int, default=4,
+    parser.add_argument("--batch_size", type=int, default=2,
         help="Size of the batch.")
     parser.add_argument("--train_file", type=str, default="data/process.train.json",
         help="A json file containing the training data.")
@@ -45,7 +45,7 @@ def main(raw_args=None):
         help="Total number of training epochs to perform.")
     parser.add_argument("--max_train_steps", type=int, default=None,
         help="Total number of training steps to perform.")
-    parser.add_argument("--gradient_accumulation_steps", type=int, default=8,
+    parser.add_argument("--gradient_accumulation_steps", type=int, default=16,
         help="Number of updates steps to accumulate for a backward/update pass.")
     parser.add_argument("--num_warmup_steps", type=int, default=1,
         help="Number of steps for the warmup in the lr scheduler.")
