@@ -1,8 +1,11 @@
 from collections import defaultdict
-from pprint import pprint
 import json
 from pathlib import Path
 from tqdm import tqdm
+
+# TODO:
+# - use mapping.pair to transform text
+# - delexicalize.py to delexicalize actions
 
 path = Path("data/multiwoz/")
 with (path/"dialog_acts.json").open() as fin:

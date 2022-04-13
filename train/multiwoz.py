@@ -28,7 +28,7 @@ def main(raw_args=None):
                                     "model on a causal language modeling task")
     parser.add_argument("--directory", type=str, required=True, help="A path to save model.")
     parser.add_argument("--checkpoint", type=str, required=True, help="A path for initial model.")
-    parser.add_argument("--domain", type=str, required=True, help="The subset of multiwoz to train.")
+    parser.add_argument("--percent", type=int, default=100, help="The subset of multiwoz to train.")
     parser.add_argument("--batch_size", type=int, default=8,
         help="Size of the batch.")
     parser.add_argument("--train_file", type=str, default="data/process.train.json",
@@ -52,12 +52,12 @@ def main(raw_args=None):
     tokenizer = GPT2Tokenizer.from_pretrained(args.checkpoint)
     model = GPT2LMHeadModel.from_pretrained(args.checkpoint)
 
-    datasets = load_dataset("json", data_files={
+    datasets = load_dataset("json", split=f"train[:{args.percent}%]+valid", data_files={
         "train": "data/multiwoz/train/encoded.json",
         "valid": "data/multiwoz/dev/encoded.json"
     })
 
-    datasets = datasets.filter(lambda x: args.domain in x["domain"])
+    datasets = datasets
 
     special_tokens = get_special_tokens(args.domain)
 
