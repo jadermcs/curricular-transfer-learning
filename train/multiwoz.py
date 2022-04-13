@@ -31,7 +31,7 @@ def main(raw_args=None):
     parser.add_argument("--directory", type=str, required=True, help="A path to save model.")
     parser.add_argument("--checkpoint", type=str, required=True, help="A path for initial model.")
     parser.add_argument("--percent", type=int, default=100, help="The subset of multiwoz to train.")
-    parser.add_argument("--batch_size", type=int, default=2,
+    parser.add_argument("--batch_size", type=int, default=8,
         help="Size of the batch.")
     parser.add_argument("--train_file", type=str, default="data/process.train.json",
         help="A json file containing the training data.")
@@ -45,7 +45,7 @@ def main(raw_args=None):
         help="Total number of training epochs to perform.")
     parser.add_argument("--max_train_steps", type=int, default=None,
         help="Total number of training steps to perform.")
-    parser.add_argument("--gradient_accumulation_steps", type=int, default=16,
+    parser.add_argument("--gradient_accumulation_steps", type=int, default=8,
         help="Number of updates steps to accumulate for a backward/update pass.")
     parser.add_argument("--num_warmup_steps", type=int, default=1,
         help="Number of steps for the warmup in the lr scheduler.")
@@ -87,14 +87,14 @@ def main(raw_args=None):
         f"{args.checkpoint}-mwozsub",
         run_name=f"{args.checkpoint}-mwozsub",
         evaluation_strategy="epoch",
-        per_device_train_batch_size=32,
-        gradient_accumulation_steps=4,
-        learning_rate=2e-5,
-        weight_decay=0.01,
-        warmup_steps=2000,
-        num_train_epochs=100,
+        per_device_train_batch_size=args.batch_size,
+        gradient_accumulation_steps=args.gradient_accumulation_steps,
+        learning_rate=args.learning_rate,
+        weight_decay=args.weight_decay,
+        warmup_steps=args.num_warmup_steps,
+        num_train_epochs=args.num_train_epochs,
         report_to="wandb",
-        save_strategy="epoch"
+        save_strategy="epoch",
     )
 
     trainer = Trainer(
