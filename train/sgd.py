@@ -14,8 +14,8 @@ def get_special_tokens():
     with open("data/multiwoz/schema.json") as fin:
         data = json.load(fin)
     for domain in data:
-        if domain == exclude_domain:
-            continue
+        #if domain == exclude_domain:
+        #    continue
         for value in data[domain]["slots"]:
             base.append("<"+value["name"]+">")
         for value in data[domain]["intents"]:

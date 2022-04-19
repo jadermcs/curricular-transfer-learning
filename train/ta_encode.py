@@ -49,7 +49,7 @@ def main(raw_args=None):
 
     datasets = load_dataset("json", data_files={
         "train": "data/tripadvisor/train/encoded.json",
-        "valid": "data/tripadvisor/dev/encoded.json"
+        "valid": "data/tripadvisor/valid/encoded.json"
     })
 
     datasets = datasets.shuffle(seed=SEED)
