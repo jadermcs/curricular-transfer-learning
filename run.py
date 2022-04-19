@@ -75,13 +75,10 @@ if __name__ == "__main__":
 # TODO:
 # mwoz script:
 # add mapping.par and delexicalize.py
-# save learning curve.
 
 # sgd script:
-# save learning curve.
+# preprocess data
 
 # tripadvisor:
 # navigate more pages (in replies) and more cities; london, etc
 # add special tokens from NER
-# save learning curve.
-
