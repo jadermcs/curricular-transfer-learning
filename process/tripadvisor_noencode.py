@@ -17,9 +17,9 @@ def main():
         proc.append(encode)
 
     (path/"train").mkdir(exist_ok=True)
-    trainpath = path/"train/noencode.json"
+    trainpath = path/"train/noencoded.json"
     (path/"valid").mkdir(exist_ok=True)
-    validpath = path/"valid/noencode.json"
+    validpath = path/"valid/noencoded.json"
     with trainpath.open("w") as ftrain, validpath.open("w") as fvalid:
         for index, line in enumerate(proc):
             if index % 3 != 0:
