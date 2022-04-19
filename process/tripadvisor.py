@@ -7,6 +7,9 @@ import spacy
 def main():
     path = pathlib.Path("data/tripadvisor/")
     # nlp = spacy.load("en_core_web_sm")
+    schema = path/"schema.json"
+    with schema.open() as fin:
+        fin.write("ORG")
 
     data = []
     proc = []
