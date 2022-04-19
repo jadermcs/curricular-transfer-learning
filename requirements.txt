@@ -3,3 +3,4 @@ wandb>=0.12
 tqdm>=4.6
 transformers==4.17
 datasets==2.0
+spacy==3.2.4

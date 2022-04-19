@@ -3,7 +3,6 @@
 import json
 import torch
 import argparse
-from torch.utils.data import Dataset, DataLoader
 from transformers import GPT2Tokenizer, GPT2LMHeadModel
 from transformers import Trainer, TrainingArguments
 from datasets import load_dataset
@@ -28,7 +27,6 @@ def main(raw_args=None):
                                     "model on a causal language modeling task")
     parser.add_argument("--directory", type=str, required=True, help="A path to save model.")
     parser.add_argument("--checkpoint", type=str, required=True, help="A path for initial model.")
-    parser.add_argument("--percent", type=str, required=True, help="The fraction of examples to pick.")
     parser.add_argument("--batch_size", type=int, default=8,
         help="Size of the batch.")
     parser.add_argument("--train_file", type=str, default="data/process.train.json",
@@ -77,22 +75,23 @@ def main(raw_args=None):
     )
 
     training_args = TrainingArguments(
-        f"{args.checkpoint}-mwozsub",
-        run_name=f"{args.checkpoint}-mwozsub",
+        f"{args.directory}",
+        run_name=f"{args.directory}",
         evaluation_strategy="epoch",
-        per_device_train_batch_size=32,
-        gradient_accumulation_steps=4,
-        learning_rate=2e-5,
-        weight_decay=0.01,
-        warmup_steps=2000,
-        num_train_epochs=100,
+        per_device_train_batch_size=args.batch_size,
+        gradient_accumulation_steps=args.gradient_accumulation_steps,
+        learning_rate=args.learning_rate,
+        weight_decay=args.weight_decay,
+        warmup_steps=args.num_warmup_steps,
+        num_train_epochs=args.num_train_epochs,
         report_to="wandb",
-        save_strategy="epoch"
+        save_strategy="epoch",
     )
 
     trainer = Trainer(
         model=model,
         args=training_args,
+        tokenizer=tokenizer,
         train_dataset=datasets["train"],
         eval_dataset=datasets["valid"],
     )

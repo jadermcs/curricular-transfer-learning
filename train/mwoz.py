@@ -3,7 +3,6 @@
 import json
 import torch
 import argparse
-from torch.utils.data import Dataset, DataLoader
 from transformers import GPT2Tokenizer, GPT2LMHeadModel
 from transformers import Trainer, TrainingArguments
 from datasets import load_dataset
@@ -33,6 +32,8 @@ def main(raw_args=None):
     parser.add_argument("--percent", type=int, default=100, help="The subset of multiwoz to train.")
     parser.add_argument("--batch_size", type=int, default=8,
         help="Size of the batch.")
+    parser.add_argument("--token_length", type=int, default=512,
+        help="Size of token sequence.")
     parser.add_argument("--train_file", type=str, default="data/process.train.json",
         help="A json file containing the training data.")
     parser.add_argument("--validation_file", type=str, default="data/process.valid.json",
@@ -69,8 +70,9 @@ def main(raw_args=None):
     model.resize_token_embeddings(len(tokenizer))
 
     def tokenizer_function(examples):
-        res = tokenizer(examples["text"], truncation=True, padding="max_length", max_length=512)
-        res['labels'] = res['input_ids']
+        res = tokenizer(examples["text"], truncation=True, padding="max_length",
+                        max_length=args.token_length)
+        res['labels'] = res['input_ids'].copy()
         return res
 
     column_names = datasets["train"].column_names
@@ -84,8 +86,8 @@ def main(raw_args=None):
     )
 
     training_args = TrainingArguments(
-        f"{args.checkpoint}-mwozsub",
-        run_name=f"{args.checkpoint}-mwozsub",
+        f"{args.directory}",
+        run_name=f"{args.directory}",
         evaluation_strategy="epoch",
         per_device_train_batch_size=args.batch_size,
         gradient_accumulation_steps=args.gradient_accumulation_steps,
@@ -100,6 +102,7 @@ def main(raw_args=None):
     trainer = Trainer(
         model=model,
         args=training_args,
+        tokenizer=tokenizer,
         train_dataset=datasets["train"],
         eval_dataset=datasets["valid"],
     )
