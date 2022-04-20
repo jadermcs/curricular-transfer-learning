@@ -14,7 +14,7 @@ def get_special_tokens():
     base = ["<sos_u>", "<eos_u>", "<sos_b>", "<eos_b>",
             "<sos_a>", "<eos_a>", "<sos_r>", "<eos_r>"]
     with open("data/tripadvisor/schema.json") as fin:
-        data = json.load(fin)
+        data = fin.readlines()
     for value in data:
         base.append("<"+value+">")
     return base
