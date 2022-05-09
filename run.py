@@ -25,42 +25,50 @@ if __name__ == "__main__":
         # mwoz.main([
         #     "--directory", f"models/{model_type}/multiwoz",
         #     "--checkpoint", f"{model_type}",
+        #     "--num_train_epochs", 40,
         # ])
 
         # gpt-2 -> sgd -> multiwoz
         # sgd.main([
         #     "--directory", f"models/{model_type}/sgd",
         #     "--checkpoint", f"{model_type}",
+        #     "--num_train_epochs", 40,
         # ])
         # mwoz.main([
         #     "--directory", f"models/{model_type}/sgd/multiwoz",
         #     "--checkpoint", f"models/{model_type}/sgd",
+        #     "--num_train_epochs", 40,
         # ])
         
         # gpt-2 -> tripadvisor -> sgd -> multiwoz
-        ta_encode.main([
-                "--directory", f"models/{model_type}/ta_encode",
-                "--checkpoint", f"{model_type}",
-        ])
+        # ta_encode.main([
+        #         "--directory", f"models/{model_type}/ta_encode",
+        #         "--checkpoint", f"{model_type}",
+        #         "--num_train_epochs", 40,
+        # ])
         # sgd.main([
         #     "--directory", f"models/{model_type}/ta_encode/sgd",
         #     "--checkpoint", f"models/{model_type}/ta_encode",
+        #     "--num_train_epochs", 40,
         # ])
         # mwoz.main([
         #     "--directory", f"models/{model_type}/ta_encode/sgd/multiwoz",
         #     "--checkpoint", f"models/{model_type}/ta_encode/sgd",
+        #     "--num_train_epochs", 40,
         # ])
         
         # gpt-2 -> tripadvisor (without tods transformation) -> multiwoz
         ta_noencode.main([
                 "--directory", f"models/{model_type}/ta_noencode",
                 "--checkpoint", f"{model_type}",
+                "--num_train_epochs", 40,
         ])
 
         for encode in ["endode", "noencode"]:
             mwoz.main([
                 "--directory", f"models/{model_type}/ta_{encode}/multiwoz",
                 "--checkpoint", f"models/{model_type}/ta_{encode}",
+                "--num_train_epochs", 40,
             ])
 
         # gpt-2 -> tripadvisor -> sgd -> multiwoz (low resource setting)
@@ -68,6 +76,7 @@ if __name__ == "__main__":
         #     mwoz.main([
         #         "--directory", f"models/{model_type}/ta_encode/sgd/multiwoz_{frac}",
         #         "--checkpoint", f"models/{model_type}/ta_encode/sgd",
+        #         "--num_train_epochs", 40,
         #         "--percent", frac,
         #     ])
 
@@ -80,5 +89,6 @@ if __name__ == "__main__":
 # preprocess data
 
 # tripadvisor:
-# navigate more pages (in replies) and more cities; london, etc
 # add special tokens from NER
+
+# run with deepspeed

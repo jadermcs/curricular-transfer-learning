@@ -21,7 +21,8 @@ def main():
         for turn, utt in enumerate(dialogue["utterances"][1:]):
             encode = {"id": f"{i}-{turn}", "text": ""}
             encode["text"] += "<sos_u>"+dialogue["utterances"][0]["utterance"]+"<eos_u>"
-            encode["text"] += "<sos_b>"+" ".join(dialogue["utterances"][0]["utterance"])+"<eos_b>"
+            encode["text"] += "<sos_b>"+dialogue["intent"]+" "+\
+                " ".join(dialogue["utterances"][0]["entities"])+"<eos_b>"
             encode["text"] += "<sos_a>"+" ".join(utt["entities"])+"<eos_a>"
             encode["text"] += "<sos_r>"+utt["utterance"]+"<eos_r>"
             proc.append(encode)
