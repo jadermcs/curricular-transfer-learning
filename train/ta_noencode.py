@@ -48,7 +48,7 @@ def main(raw_args=None):
     column_names = datasets["train"].column_names
 
     def tokenizer_function(examples):
-        return tokenizer(examples["encoded"])
+        return tokenizer(examples["text"])
 
     column_names = datasets["train"].column_names
 

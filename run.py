@@ -64,7 +64,7 @@ if __name__ == "__main__":
                 "--num_train_epochs", "40",
         ])
 
-        for encode in ["endode", "noencode"]:
+        for encode in ["encode", "noencode"]:
             mwoz.main([
                 "--directory", f"models/{model_type}/ta_{encode}/multiwoz",
                 "--checkpoint", f"models/{model_type}/ta_{encode}",
