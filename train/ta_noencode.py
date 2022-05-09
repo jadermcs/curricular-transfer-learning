@@ -36,6 +36,7 @@ def main(raw_args=None):
     args = parser.parse_args(raw_args)
 
     tokenizer = GPT2Tokenizer.from_pretrained(args.checkpoint)
+    tokenizer.pad_token = tokenizer.eos_token
     model = GPT2LMHeadModel.from_pretrained(args.checkpoint)
 
     datasets = load_dataset("json", data_files={
