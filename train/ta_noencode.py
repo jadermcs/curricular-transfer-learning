@@ -48,7 +48,10 @@ def main(raw_args=None):
     column_names = datasets["train"].column_names
 
     def tokenizer_function(examples):
-        return tokenizer(examples["text"])
+        res = tokenizer(examples["text"], truncation=True, padding="max_length",
+                        max_length=args.token_length)
+        res['labels'] = res['input_ids'].copy()
+        return res
 
     column_names = datasets["train"].column_names
 
