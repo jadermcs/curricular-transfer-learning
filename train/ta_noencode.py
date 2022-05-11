@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # coding=utf-8
+from os import truncate
 import torch
 import argparse
 from itertools import chain
@@ -38,7 +39,7 @@ def main(raw_args=None):
     tokenizer = GPT2Tokenizer.from_pretrained(args.checkpoint)
     tokenizer.pad_token = tokenizer.eos_token
     model = GPT2LMHeadModel.from_pretrained(args.checkpoint)
-
+    model.resize_token_embeddings(len(tokenizer))
     datasets = load_dataset("json", data_files={
         "train": "data/tripadvisor/train/noencoded.json",
         "valid": "data/tripadvisor/valid/noencoded.json"
@@ -49,7 +50,8 @@ def main(raw_args=None):
     column_names = datasets["train"].column_names
 
     def tokenizer_function(examples):
-        return tokenizer(examples["text"])
+        output = tokenizer(examples["text"], truncation=True)
+        return output
 
     column_names = datasets["train"].column_names
 
