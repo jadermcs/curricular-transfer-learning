@@ -76,7 +76,7 @@ def main(raw_args=None):
         return res
 
     print("Grouping data.")
-    lm_datasets = datasets.map(
+    datasets = datasets.map(
         group_texts,
         batched=True,
         num_proc=4,
