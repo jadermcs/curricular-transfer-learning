@@ -93,7 +93,7 @@ def main(raw_args=None):
         warmup_steps=args.num_warmup_steps,
         num_train_epochs=args.num_train_epochs,
         report_to="wandb",
-        save_strategy="epoch",
+        save_strategy="no",
     )
 
     trainer = Trainer(
@@ -105,6 +105,7 @@ def main(raw_args=None):
     )
 
     trainer.train()
+    trainer.save_model()
 
 if __name__ == "__main__":
     main()
