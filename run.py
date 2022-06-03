@@ -58,11 +58,11 @@ if __name__ == "__main__":
         # ])
         
         # gpt-2 -> tripadvisor (without tods transformation) -> multiwoz
-        ta_noencode.main([
-                "--directory", f"models/{model_type}/ta_noencode",
-                "--checkpoint", f"{model_type}",
-                "--num_train_epochs", "40",
-        ])
+        # ta_noencode.main([
+        #         "--directory", f"models/{model_type}/ta_noencode",
+        #         "--checkpoint", f"{model_type}",
+        #         "--num_train_epochs", "40",
+        # ])
 
         for encode in ["encode", "noencode"]:
             mwoz.main([
