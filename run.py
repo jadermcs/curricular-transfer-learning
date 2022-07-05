@@ -1,6 +1,10 @@
 from train import mwoz, sgd, ta_encode, ta_noencode
 from process import multiwoz, tripadvisor, tripadvisor_noencode
 
+EPOCHS = 40
+BATCH_SIZE = 16
+
+
 FRACTION = [
     5, 10, 20, 50
 ]
@@ -22,17 +26,19 @@ if __name__ == "__main__":
 
     for model_type in GPT_LIST:
         # gpt-2 -> multiwoz
-        # mwoz.main([
-        #     "--directory", f"models/{model_type}/multiwoz",
-        #     "--checkpoint", f"{model_type}",
-        #     "--num_train_epochs", "40",
-        # ])
+        mwoz.main([
+            "--directory", f"models/{model_type}/multiwoz",
+            "--checkpoint", f"{model_type}",
+            "--num_train_epochs", EPOCHS,
+            "--batch_size", BATCH_SIZE,
+        ])
 
         # gpt-2 -> sgd -> multiwoz
         # sgd.main([
         #     "--directory", f"models/{model_type}/sgd",
         #     "--checkpoint", f"{model_type}",
         #     "--num_train_epochs", "40",
+        #     "--batch_size", BATCH_SIZE,
         # ])
         # mwoz.main([
         #     "--directory", f"models/{model_type}/sgd/multiwoz",
@@ -41,11 +47,12 @@ if __name__ == "__main__":
         # ])
         
         # gpt-2 -> tripadvisor -> sgd -> multiwoz
-        # ta_encode.main([
-        #         "--directory", f"models/{model_type}/ta_encode",
-        #         "--checkpoint", f"{model_type}",
-        #         "--num_train_epochs", "40",
-        # ])
+        ta_encode.main([
+                "--directory", f"models/{model_type}/ta_encode",
+                "--checkpoint", f"{model_type}",
+                "--num_train_epochs", EPOCHS,
+                "--batch_size", BATCH_SIZE,
+        ])
         # sgd.main([
         #     "--directory", f"models/{model_type}/ta_encode/sgd",
         #     "--checkpoint", f"models/{model_type}/ta_encode",
@@ -58,17 +65,19 @@ if __name__ == "__main__":
         # ])
         
         # gpt-2 -> tripadvisor (without tods transformation) -> multiwoz
-        # ta_noencode.main([
-        #         "--directory", f"models/{model_type}/ta_noencode",
-        #         "--checkpoint", f"{model_type}",
-        #         "--num_train_epochs", "40",
-        # ])
+        ta_noencode.main([
+                "--directory", f"models/{model_type}/ta_noencode",
+                "--checkpoint", f"{model_type}",
+                "--num_train_epochs", EPOCHS,
+                "--batch_size", BATCH_SIZE,
+        ])
 
         for encode in ["encode", "noencode"]:
             mwoz.main([
                 "--directory", f"models/{model_type}/ta_{encode}/multiwoz",
                 "--checkpoint", f"models/{model_type}/ta_{encode}",
-                "--num_train_epochs", "40",
+                "--num_train_epochs", EPOCHS,
+                "--batch_size", BATCH_SIZE,
             ])
 
         # gpt-2 -> tripadvisor -> sgd -> multiwoz (low resource setting)
@@ -90,5 +99,3 @@ if __name__ == "__main__":
 
 # tripadvisor:
 # add special tokens from NER
-
-# run with deepspeed
