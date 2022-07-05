@@ -17,10 +17,10 @@ GPT_LIST = [
 ]
 
 if __name__ == "__main__":
-    # print("Processing tripadvisor...")
-    # tripadvisor.main()
-    # print("Processing tripadvisor (no encode)...")
-    # tripadvisor_noencode.main()
+    print("Processing tripadvisor...")
+    tripadvisor.main()
+    print("Processing tripadvisor (no encode)...")
+    tripadvisor_noencode.main()
     # print("Processing multiwoz...")
     # multiwoz.main()
 
