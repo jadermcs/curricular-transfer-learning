@@ -1,8 +1,8 @@
 from train import mwoz, sgd, ta_encode, ta_noencode
 from process import multiwoz, tripadvisor, tripadvisor_noencode
 
-EPOCHS = 40
-BATCH_SIZE = 16
+EPOCHS = "40"
+BATCH_SIZE = "16"
 
 
 FRACTION = [
