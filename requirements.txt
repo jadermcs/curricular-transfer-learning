@@ -5,3 +5,4 @@ transformers==4.17
 datasets==2.0
 spacy==3.2.4
 deepspeed
+git+https://github.com/Tomiinek/MultiWOZ_Evaluation.git@master
