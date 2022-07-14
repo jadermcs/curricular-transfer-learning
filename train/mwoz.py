@@ -3,6 +3,7 @@
 import json
 import torch
 import argparse
+import numpy as np
 from transformers import GPT2Tokenizer, GPT2LMHeadModel
 from transformers import Trainer, TrainingArguments
 from datasets import load_dataset
@@ -34,10 +35,6 @@ def main(raw_args=None):
         help="Size of the batch.")
     parser.add_argument("--token_length", type=int, default=512,
         help="Size of token sequence.")
-    parser.add_argument("--train_file", type=str, default="data/process.train.json",
-        help="A json file containing the training data.")
-    parser.add_argument("--validation_file", type=str, default="data/process.valid.json",
-        help="A json file containing the validation data.")
     parser.add_argument("--learning_rate", type=float, default=2e-5,
         help="Initial learning rate to use.")
     parser.add_argument("--weight_decay", type=float, default=0.1,
@@ -55,7 +52,8 @@ def main(raw_args=None):
 
     datasets = load_dataset("json", data_files={
         "train": "data/multiwoz/train/encoded.json",
-        "valid": "data/multiwoz/dev/encoded.json"
+        "valid": "data/multiwoz/dev/encoded.json",
+        "test": "data/multiwoz/test/encoded.json",
     })
 
     datasets = datasets.shuffle(seed=SEED)
@@ -70,8 +68,10 @@ def main(raw_args=None):
     model.resize_token_embeddings(len(tokenizer))
 
     def tokenizer_function(examples):
-        res = tokenizer(examples["text"], truncation=True, padding="max_length",
-                        max_length=args.token_length)
+        res = tokenizer(examples["text"],
+                        return_overflowing_tokens=True,
+                        max_length=args.token_length,
+                        stride=args.token_length//2)
         res['labels'] = res['input_ids'].copy()
         return res
 

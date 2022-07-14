@@ -3,7 +3,6 @@ import json
 import spacy
 
 
-
 def main():
     path = pathlib.Path("data/tripadvisor/")
     # nlp = spacy.load("en_core_web_sm")
