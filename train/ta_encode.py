@@ -72,7 +72,7 @@ def main(raw_args=None):
     datasets = datasets.map(
         tokenizer_function,
         batched=True,
-        num_proc=4,
+        num_proc=8,
         remove_columns=column_names,
     )
 

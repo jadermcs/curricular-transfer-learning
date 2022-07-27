@@ -14,6 +14,18 @@ with open('utils/mapping.pair') as fin:
         replacements.append((' ' + tok_from + ' ', ' ' + tok_to + ' '))
 
 
+def parse_state(belief):
+    parse = []
+    for intent in belief.split("[")[1:]:
+        intent, slots = intent.split("]")
+        slots = slots.split("#")
+        slotsdict = {}
+        for slot in slots[1:]:
+            k,v = slot.split(" ", 1)
+            slotsdict[k] = v.strip()
+        parse.append((intent, slotsdict))
+    return parse
+
 def insertSpace(token, text):
     sidx = 0
     while True:
@@ -68,9 +80,9 @@ def normalize(text):
     # weird unicode bug
     text = re.sub(u"(\u2018|\u2019)", "'", text)
 
-    # replace time and and price
-    text = re.sub(timepat, ' [value_time] ', text)
-    text = re.sub(pricepat, ' [value_price] ', text)
+    # replace time and and price TODO: it disabled the belief extraction 
+    #text = re.sub(timepat, ' [value_time] ', text)
+    #text = re.sub(pricepat, ' [value_price] ', text)
     #text = re.sub(pricepat2, '[value_price]', text)
 
     # replace st.

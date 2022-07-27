@@ -1,6 +1,7 @@
 import pathlib
 import json
 import spacy
+from nlp import normalize
 
 
 def main():
@@ -19,10 +20,10 @@ def main():
     for i, dialogue in enumerate(data):
         for turn, utt in enumerate(dialogue["utterances"][1:]):
             encode = {"id": f"{i}-{turn}", "text": ""}
-            encode["text"] += "<sos_u>"+dialogue["utterances"][0]["utterance"]+"<eos_u>"
-            encode["text"] += "<sos_b>"+dialogue["domain"]+"<eos_b>"
+            encode["text"] += "<sos_u>"+normalize(dialogue["utterances"][0]["utterance"])+"<eos_u>"
+            encode["text"] += "<sos_b>"+dialogue["domain"].lower()+"<eos_b>"
             encode["text"] += "<sos_a> <eos_a>"
-            encode["text"] += "<sos_r>"+utt["utterance"]+"<eos_r>"
+            encode["text"] += "<sos_r>"+normalize(utt["utterance"])+"<eos_r>"
             proc.append(encode)
 
     (path/"train").mkdir(exist_ok=True)

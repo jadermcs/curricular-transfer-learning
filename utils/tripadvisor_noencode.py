@@ -1,5 +1,6 @@
 import pathlib
 import json
+from nlp import normalize
 
 def main():
     path = pathlib.Path("data/tripadvisor/")
@@ -13,7 +14,7 @@ def main():
     for i, dialogue in enumerate(data):
         encode = {"id": f"{i}", "text": ""}
         for utt in dialogue["utterances"]:
-            encode["text"] += " "+utt["utterance"]
+            encode["text"] += " "+normalize(utt["utterance"])
         proc.append(encode)
 
     (path/"train").mkdir(exist_ok=True)

@@ -28,6 +28,8 @@ use_cpu: false
 
 Now run:
 ```sh
+ln -s -r ../multiwoz/data/MultiWOZ_2.2/ data/multiwoz
+ln -s -r ../multiwoz/db data/db
 python process/multiwoz.py
 python run.py
 ```

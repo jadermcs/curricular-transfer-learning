@@ -3,6 +3,7 @@ wandb>=0.12
 tqdm>=4.6
 transformers==4.17
 datasets==2.0
+nltk
 spacy==3.2.4
 deepspeed
 accelerate
