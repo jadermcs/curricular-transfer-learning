@@ -16,7 +16,7 @@ def get_special_tokens():
     with open("data/tripadvisor/schema.json") as fin:
         data = fin.readlines()
     for value in data:
-        base.append("<"+value+">")
+        base.append("["+value+"]")
     return base
 
 def main(raw_args=None):

@@ -14,15 +14,10 @@ SEED = 42
 def get_special_tokens():
     base = ["<sos_u>", "<eos_u>", "<sos_b>", "<eos_b>",
             "<sos_a>", "<eos_a>", "<sos_r>", "<eos_r>"]
-    with open("data/multiwoz/schema.json") as fin:
-        data = json.load(fin)
-    for domain in data:
-        for value in domain["slots"]:
-            name = "<"+value["name"].split('-')[-1]+">"
-            if name not in base:
-                base.append(name)
-        for value in domain["intents"]:
-            base.append("["+value["name"]+"]")
+    with open("data/multiwoz/tokens.txt") as fin:
+        data = fin.readlines()
+    for token in data:
+        base.append(token.strip())
     return base
 
 def main(raw_args=None):
@@ -33,7 +28,7 @@ def main(raw_args=None):
     parser.add_argument("--percent", type=int, default=100, help="The subset of multiwoz to train.")
     parser.add_argument("--batch_size", type=int, default=8,
         help="Size of the batch.")
-    parser.add_argument("--token_length", type=int, default=512,
+    parser.add_argument("--token_length", type=int, default=256,
         help="Size of token sequence.")
     parser.add_argument("--learning_rate", type=float, default=2e-5,
         help="Initial learning rate to use.")
@@ -71,7 +66,10 @@ def main(raw_args=None):
         res = tokenizer(examples["text"],
                         return_overflowing_tokens=True,
                         max_length=args.token_length,
-                        stride=args.token_length//2)
+                        truncation=True,
+                        padding="max_length",
+                        stride=16
+                        )
         res['labels'] = res['input_ids'].copy()
         return res
 
@@ -80,8 +78,8 @@ def main(raw_args=None):
     print("Tokenizing data.")
     datasets = datasets.map(
         tokenizer_function,
-        batched=True,
         num_proc=4,
+        batched=True,
         remove_columns=column_names,
     )
 
