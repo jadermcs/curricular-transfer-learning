@@ -26,7 +26,7 @@ def main():
             data.append(json.loads(line))
     random.shuffle(data)
     with trainpath.open("w") as ftrain, validpath.open("w") as fvalid:
-        for i, dialogue in enumerate(tqdm(data)):
+        for i, dialogue in enumerate(tqdm(data[:100000])):
             for turn, utt in enumerate(dialogue["utterances"][1:]):
                 encode = {"id": f"{i}-{turn}", "text": ""}
                 encode["text"] += "<sos_u>"+normalize(dialogue["utterances"][0]["utterance"])+"<eos_u>"

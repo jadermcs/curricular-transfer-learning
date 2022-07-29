@@ -21,7 +21,7 @@ def main():
             data.append(json.loads(line))
     random.shuffle(data)
     with trainpath.open("w") as ftrain, validpath.open("w") as fvalid:
-        for i, dialogue in enumerate(tqdm(data)):
+        for i, dialogue in enumerate(tqdm(data[:100000])):
             encode = {"id": f"{i}", "text": ""}
             for utt in dialogue["utterances"]:
                 encode["text"] += " "+normalize(utt["utterance"])
