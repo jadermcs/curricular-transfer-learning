@@ -56,7 +56,6 @@ if __name__ == "__main__":
         ta_encode.main([
                 "--directory", f"models/{model_type}/ta_encode",
                 "--checkpoint", f"{model_type}",
-                "--num_train_epochs", EPOCHS,
                 "--batch_size", BATCH_SIZE,
                 "--gradient_accumulation_steps", GRAD_ACC,
                 "--max_steps", MAX_STEPS,
@@ -80,7 +79,6 @@ if __name__ == "__main__":
         ta_noencode.main([
                 "--directory", f"models/{model_type}/ta_noencode",
                 "--checkpoint", f"{model_type}",
-                "--num_train_epochs", EPOCHS,
                 "--batch_size", BATCH_SIZE,
                 "--gradient_accumulation_steps", GRAD_ACC,
                 "--max_steps", MAX_STEPS,
