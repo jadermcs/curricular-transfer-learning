@@ -79,7 +79,7 @@ def main(raw_args=None):
     training_args = TrainingArguments(
         f"{args.directory}",
         run_name=f"{args.directory}",
-        evaluation_strategy="step",
+        evaluation_strategy="steps",
         eval_steps=500,
         per_device_train_batch_size=args.batch_size,
         gradient_accumulation_steps=args.gradient_accumulation_steps,
