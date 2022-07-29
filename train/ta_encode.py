@@ -36,14 +36,12 @@ def main(raw_args=None):
         help="Initial learning rate to use.")
     parser.add_argument("--weight_decay", type=float, default=0.1,
         help="Weight decay to use.")
-    parser.add_argument("--num_train_epochs", type=int, default=100,
+    parser.add_argument("--max_steps", type=int, default=100,
         help="Total number of training epochs to perform.")
     parser.add_argument("--gradient_accumulation_steps", type=int, default=8,
         help="Number of updates steps to accumulate for a backward/update pass.")
     parser.add_argument("--num_warmup_steps", type=int, default=1,
         help="Number of steps for the warmup in the lr scheduler.")
-    parser.add_argument("--max_steps", type=int, default=-1,
-        help="Number of examples.")
     args = parser.parse_args(raw_args)
 
     tokenizer = GPT2Tokenizer.from_pretrained(args.checkpoint)
@@ -81,7 +79,8 @@ def main(raw_args=None):
     training_args = TrainingArguments(
         f"{args.directory}",
         run_name=f"{args.directory}",
-        evaluation_strategy="epoch",
+        evaluation_strategy="step",
+        eval_steps=500,
         per_device_train_batch_size=args.batch_size,
         gradient_accumulation_steps=args.gradient_accumulation_steps,
         learning_rate=args.learning_rate,
