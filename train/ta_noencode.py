@@ -34,6 +34,8 @@ def main(raw_args=None):
         help="Number of updates steps to accumulate for a backward/update pass.")
     parser.add_argument("--num_warmup_steps", type=int, default=1,
         help="Number of steps for the warmup in the lr scheduler.")
+    parser.add_argument("--max_steps", type=int, default=-1,
+        help="Number of examples.")
     args = parser.parse_args(raw_args)
 
     tokenizer = GPT2Tokenizer.from_pretrained(args.checkpoint)
@@ -80,7 +82,7 @@ def main(raw_args=None):
         group_texts,
         batched=True,
         num_proc=4,
-    )
+    ).select(range(args.max_examples))
 
     training_args = TrainingArguments(
         f"{args.directory}",
@@ -91,7 +93,7 @@ def main(raw_args=None):
         learning_rate=args.learning_rate,
         weight_decay=args.weight_decay,
         warmup_steps=args.num_warmup_steps,
-        num_train_epochs=args.num_train_epochs,
+        max_steps=args.max_steps,
         report_to="wandb",
         save_strategy="no",
     )

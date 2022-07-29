@@ -1,10 +1,16 @@
-import pathlib
-import random
 import json
-from utils.nlp import normalize
+import string
+import random
+import pathlib
+import numpy as np
 from tqdm import tqdm
 
 random.seed(43)
+MSG_MAX_SIZE = 1000
+
+def normalize(msg):
+    rm_spec = [x for x in msg if x in string.printable]
+    return " ".join(rm_spec)
 
 def main():
     path = pathlib.Path("data/tripadvisor/")
@@ -21,10 +27,10 @@ def main():
             data.append(json.loads(line))
     random.shuffle(data)
     with trainpath.open("w") as ftrain, validpath.open("w") as fvalid:
-        for i, dialogue in enumerate(tqdm(data[:100000])):
+        for i, dialogue in enumerate(tqdm(data)):
             encode = {"id": f"{i}", "text": ""}
-            for utt in dialogue["utterances"]:
-                encode["text"] += " "+normalize(utt["utterance"])
+            for utt in dialogue["utterances"][:50*2]:
+                encode["text"] += " "+normalize(utt["utterance"][:MSG_MAX_SIZE].lower())
             if i % 3 != 0: ftrain.writelines(json.dumps(encode) + "\n")
             else:          fvalid.writelines(json.dumps(encode) + "\n")
 

@@ -4,6 +4,7 @@ from utils import multiwoz, tripadvisor, tripadvisor_noencode
 EPOCHS = "40"
 BATCH_SIZE = "16"
 GRAD_ACC = "4"
+MAX_STEPS = "200000"
 
 
 FRACTION = [
@@ -58,6 +59,7 @@ if __name__ == "__main__":
                 "--num_train_epochs", EPOCHS,
                 "--batch_size", BATCH_SIZE,
                 "--gradient_accumulation_steps", GRAD_ACC,
+                "--max_steps", MAX_STEPS,
         ])
         # sgd.main([
         #     "--directory", f"models/{model_type}/ta_encode/sgd",
@@ -81,6 +83,7 @@ if __name__ == "__main__":
                 "--num_train_epochs", EPOCHS,
                 "--batch_size", BATCH_SIZE,
                 "--gradient_accumulation_steps", GRAD_ACC,
+                "--max_steps", MAX_STEPS,
         ])
 
         for encode in ["encode", "noencode"]:
