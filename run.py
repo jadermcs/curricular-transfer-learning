@@ -4,7 +4,7 @@ from utils import multiwoz, tripadvisor, tripadvisor_noencode
 EPOCHS = "40"
 BATCH_SIZE = "16"
 GRAD_ACC = "4"
-MAX_STEPS = "200000"
+MAX_STEPS = "20000"
 
 
 FRACTION = [
