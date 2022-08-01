@@ -2,9 +2,10 @@ from train import mwoz, sgd, ta_encode, ta_noencode
 from utils import multiwoz, tripadvisor, tripadvisor_noencode
 
 EPOCHS = "40"
-BATCH_SIZE = "16"
-GRAD_ACC = "4"
+BATCH_SIZE = "4"
+GRAD_ACC = "16"
 MAX_STEPS = "10000"
+TOKEN_LENGTH = "256"
 
 
 FRACTION = [
@@ -23,8 +24,8 @@ if __name__ == "__main__":
     tripadvisor.main()
     print("Processing tripadvisor (no encode)...")
     tripadvisor_noencode.main()
-    # print("Processing multiwoz...")
-    # multiwoz.generate_encoded()
+    print("Processing multiwoz...")
+    multiwoz.generate_encoded()
 
     for model_type in GPT_LIST:
         # gpt-2 -> multiwoz
@@ -34,6 +35,7 @@ if __name__ == "__main__":
         #     "--num_train_epochs", EPOCHS,
         #     "--batch_size", BATCH_SIZE,
         #     "--gradient_accumulation_steps", GRAD_ACC,
+        #     "--token_length", TOKEN_LENGTH,
         # ])
 
         # gpt-2 -> sgd -> multiwoz
@@ -43,6 +45,7 @@ if __name__ == "__main__":
         #     "--num_train_epochs", EPOCHS,
         #     "--batch_size", BATCH_SIZE,
         #     "--gradient_accumulation_steps", GRAD_ACC,
+        #     "--token_length", TOKEN_LENGTH,
         # ])
         # mwoz.main([
         #     "--directory", f"models/{model_type}/sgd/multiwoz",
@@ -50,6 +53,7 @@ if __name__ == "__main__":
         #     "--num_train_epochs", EPOCHS,
         #     "--batch_size", BATCH_SIZE,
         #     "--gradient_accumulation_steps", GRAD_ACC,
+        #     "--token_length", TOKEN_LENGTH,
         # ])
 
         # gpt-2 -> tripadvisor -> sgd -> multiwoz
@@ -58,6 +62,7 @@ if __name__ == "__main__":
                 "--checkpoint", f"{model_type}",
                 "--batch_size", BATCH_SIZE,
                 "--gradient_accumulation_steps", GRAD_ACC,
+                "--token_length", TOKEN_LENGTH,
                 "--max_steps", MAX_STEPS,
         ])
         # sgd.main([
@@ -66,6 +71,7 @@ if __name__ == "__main__":
         #     "--num_train_epochs", EPOCHS,
         #     "--batch_size", BATCH_SIZE,
         #     "--gradient_accumulation_steps", GRAD_ACC,
+        #     "--token_length", TOKEN_LENGTH,
         # ])
         # mwoz.main([
         #     "--directory", f"models/{model_type}/ta_encode/sgd/multiwoz",
@@ -73,6 +79,7 @@ if __name__ == "__main__":
         #     "--num_train_epochs", EPOCHS,
         #     "--batch_size", BATCH_SIZE,
         #     "--gradient_accumulation_steps", GRAD_ACC,
+        #     "--token_length", TOKEN_LENGTH,
         # ])
 
         # gpt-2 -> tripadvisor (without tods transformation) -> multiwoz
@@ -81,6 +88,7 @@ if __name__ == "__main__":
                 "--checkpoint", f"{model_type}",
                 "--batch_size", BATCH_SIZE,
                 "--gradient_accumulation_steps", GRAD_ACC,
+                "--token_length", TOKEN_LENGTH,
                 "--max_steps", MAX_STEPS,
         ])
 
@@ -91,6 +99,7 @@ if __name__ == "__main__":
                 "--num_train_epochs", EPOCHS,
                 "--batch_size", BATCH_SIZE,
                 "--gradient_accumulation_steps", GRAD_ACC,
+                "--token_length", TOKEN_LENGTH,
             ])
 
         # gpt-2 -> tripadvisor -> sgd -> multiwoz (low resource setting)
@@ -101,6 +110,7 @@ if __name__ == "__main__":
         #         "--num_train_epochs", EPOCHS,
         #         "--batch_size", BATCH_SIZE,
         #         "--gradient_accumulation_steps", GRAD_ACC,
+        #         "--token_length", TOKEN_LENGTH,
         #         "--percent", frac,
         #     ])
 

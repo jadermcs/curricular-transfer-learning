@@ -84,7 +84,7 @@ def main(raw_args=None):
         weight_decay=args.weight_decay,
         warmup_steps=args.num_warmup_steps,
         num_train_epochs=args.num_train_epochs,
-        report_to="wandb",
+        report_to="tensorboard",
         save_strategy="no",
     )
 

@@ -93,7 +93,8 @@ def main(raw_args=None):
         weight_decay=args.weight_decay,
         warmup_steps=args.num_warmup_steps,
         max_steps=args.max_steps,
-        report_to="wandb",
+        report_to="tensorboard",
+        logging_dir="logs",
         save_strategy="no",
     )
 
