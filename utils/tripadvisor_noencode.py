@@ -31,7 +31,7 @@ def main():
             encode = {"id": f"{i}", "text": ""}
             for utt in dialogue["utterances"][:50*2]:
                 encode["text"] += " "+normalize(utt["utterance"][:MSG_MAX_SIZE].lower())
-            if i % 3 != 0: ftrain.writelines(json.dumps(encode) + "\n")
+            if i % 9 != 0: ftrain.writelines(json.dumps(encode) + "\n")
             else:          fvalid.writelines(json.dumps(encode) + "\n")
 
 if __name__ == "__main__":

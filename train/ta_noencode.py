@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 # coding=utf-8
-from os import truncate
 import torch
 import argparse
 from itertools import chain
@@ -46,6 +45,7 @@ def main(raw_args=None):
     })
 
     datasets = datasets.shuffle(seed=SEED)
+    datasets["valid"] = datasets["valid"].select(range(5000))
 
     column_names = datasets["train"].column_names
 
@@ -86,8 +86,10 @@ def main(raw_args=None):
         f"{args.directory}",
         run_name=f"{args.directory}",
         evaluation_strategy="steps",
+        logging_steps=100,
         eval_steps=500,
         per_device_train_batch_size=args.batch_size,
+        per_device_eval_batch_size=args.batch_size,
         gradient_accumulation_steps=args.gradient_accumulation_steps,
         learning_rate=args.learning_rate,
         weight_decay=args.weight_decay,

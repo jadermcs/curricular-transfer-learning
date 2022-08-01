@@ -2,10 +2,9 @@ from train import mwoz, sgd, ta_encode, ta_noencode
 from utils import multiwoz, tripadvisor, tripadvisor_noencode
 
 EPOCHS = "40"
-BATCH_SIZE = "4"
-GRAD_ACC = "16"
-MAX_STEPS = "10000"
-TOKEN_LENGTH = "256"
+BATCH_SIZE = "16"
+GRAD_ACC = "4"
+TOKEN_LENGTH = "512"
 
 
 FRACTION = [
@@ -13,10 +12,10 @@ FRACTION = [
 ]
 
 GPT_LIST = [
-    "gpt2",
-    #"gpt2-medium",
-    #"gpt2-large",
-    #"gpt2-xl",
+    ("gpt2", 10000),
+    #("gpt2-medium", 50000),
+    #("gpt2-large", 100000),
+    #("gpt2-xl", 500000),
 ]
 
 if __name__ == "__main__":
@@ -27,7 +26,7 @@ if __name__ == "__main__":
     print("Processing multiwoz...")
     multiwoz.generate_encoded()
 
-    for model_type in GPT_LIST:
+    for model_type, max_steps in GPT_LIST:
         # gpt-2 -> multiwoz
         # mwoz.main([
         #     "--directory", f"models/{model_type}/multiwoz",
@@ -63,7 +62,7 @@ if __name__ == "__main__":
                 "--batch_size", BATCH_SIZE,
                 "--gradient_accumulation_steps", GRAD_ACC,
                 "--token_length", TOKEN_LENGTH,
-                "--max_steps", MAX_STEPS,
+                "--max_steps", str(max_steps),
         ])
         # sgd.main([
         #     "--directory", f"models/{model_type}/ta_encode/sgd",
@@ -89,7 +88,7 @@ if __name__ == "__main__":
                 "--batch_size", BATCH_SIZE,
                 "--gradient_accumulation_steps", GRAD_ACC,
                 "--token_length", TOKEN_LENGTH,
-                "--max_steps", MAX_STEPS,
+                "--max_steps", str(max_steps),
         ])
 
         for encode in ["encode", "noencode"]:

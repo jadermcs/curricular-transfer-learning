@@ -5,7 +5,7 @@ transformers>=4.17
 datasets>=2.0
 nltk>=3.7
 spacy>=3.2
-tensorboard
+tensorboard>=2.9
 deepspeed
 accelerate
 git+https://github.com/Tomiinek/MultiWOZ_Evaluation.git@master

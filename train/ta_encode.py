@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 # coding=utf-8
-import json
 import torch
 import argparse
 from transformers import GPT2Tokenizer, GPT2LMHeadModel
@@ -13,7 +12,7 @@ SEED = 42
 def get_special_tokens():
     base = ["<sos_u>", "<eos_u>", "<sos_b>", "<eos_b>",
             "<sos_a>", "<eos_a>", "<sos_r>", "<eos_r>"]
-    with open("data/tripadvisor/schema.json") as fin:
+    with open("data/tripadvisor/schema.txt") as fin:
         data = fin.readlines()
     for value in data:
         base.append("["+value+"]")
@@ -53,6 +52,7 @@ def main(raw_args=None):
     })
 
     datasets = datasets.shuffle(seed=SEED)
+    datasets["valid"] = datasets["valid"].select(range(5000))
 
     special_tokens = get_special_tokens()
 
@@ -80,8 +80,10 @@ def main(raw_args=None):
         f"{args.directory}",
         run_name=f"{args.directory}",
         evaluation_strategy="steps",
+        logging_steps=100,
         eval_steps=500,
         per_device_train_batch_size=args.batch_size,
+        per_device_eval_batch_size=args.batch_size,
         gradient_accumulation_steps=args.gradient_accumulation_steps,
         learning_rate=args.learning_rate,
         weight_decay=args.weight_decay,

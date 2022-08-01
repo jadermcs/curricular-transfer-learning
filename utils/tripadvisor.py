@@ -15,7 +15,7 @@ def normalize(msg):
 def main():
     path = pathlib.Path("data/tripadvisor/")
     # nlp = spacy.load("en_core_web_sm")
-    schema = path/"schema.json"
+    schema = path/"schema.txt"
     schema.touch(exist_ok=True)
     with schema.open("w") as fin:
         fin.write("ORG")
@@ -43,7 +43,7 @@ def main():
                 encode["text"] += "<sos_r>"+normalize(utt["utterance"][:MSG_MAX_SIZE]).lower()+"<eos_r>"
                 size = len(encode["text"])
                 sizes.append(len(encode["text"]))
-                if i % 3 != 0: ftrain.writelines(json.dumps(encode) + "\n")
+                if i % 9 != 0: ftrain.writelines(json.dumps(encode) + "\n")
                 else:          fvalid.writelines(json.dumps(encode) + "\n")
     print("Min:", np.min(sizes))
     print("Max:", np.max(sizes))
