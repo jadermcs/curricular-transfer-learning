@@ -1,11 +1,10 @@
 torch>=1.11
-wandb>=0.12
-tqdm>=4.6
 transformers>=4.17
 datasets>=2.0
+tqdm>=4.6
 nltk>=3.7
 spacy>=3.2
-tensorboard>=2.9
 deepspeed
 accelerate
+mlflow
 git+https://github.com/Tomiinek/MultiWOZ_Evaluation.git@master
