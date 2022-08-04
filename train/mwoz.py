@@ -95,7 +95,6 @@ def main(raw_args=None):
         warmup_steps=args.num_warmup_steps,
         num_train_epochs=args.num_train_epochs,
         report_to="mlflow",
-        logging_dir="logs",
         save_strategy="no",
     )
 

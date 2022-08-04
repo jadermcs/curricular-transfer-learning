@@ -90,7 +90,6 @@ def main(raw_args=None):
         warmup_steps=args.num_warmup_steps,
         max_steps=args.max_steps,
         report_to="mlflow",
-        logging_dir="logs",
         save_strategy="no",
     )
 
