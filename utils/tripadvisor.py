@@ -17,8 +17,8 @@ def main():
     # nlp = spacy.load("en_core_web_sm")
     schema = path/"schema.txt"
     schema.touch(exist_ok=True)
-    with schema.open("w") as fin:
-        fin.write("ORG")
+    # with schema.open("w") as fin:
+    #     fin.write("ORG")
 
     data = []
     

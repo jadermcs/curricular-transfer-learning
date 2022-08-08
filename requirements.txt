@@ -7,4 +7,5 @@ spacy>=3.2
 deepspeed
 accelerate
 mlflow
+matplotlib
 git+https://github.com/Tomiinek/MultiWOZ_Evaluation.git@master
