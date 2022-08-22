@@ -1,5 +1,6 @@
 from train import mwoz, ta_encode, ta_noencode
 from utils import multiwoz, tripadvisor, tripadvisor_noencode
+from eval import main as main_eval
 
 TOKEN_LENGTH = "512"
 
@@ -76,6 +77,8 @@ if __name__ == "__main__":
         #         "--token_length", TOKEN_LENGTH,
         #         "--percent", frac,
         #     ])
+    #run evaluation
+    main_eval()
 
 
 # TODO:

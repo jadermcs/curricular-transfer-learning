@@ -4,6 +4,7 @@ datasets>=2.0
 tqdm>=4.6
 nltk>=3.7
 spacy>=3.2
+mauve-text
 deepspeed
 accelerate
 mlflow
