@@ -1,5 +1,5 @@
 import json
-from nlp import normalize
+from .nlp import normalize
 from pathlib import Path
 from tqdm import tqdm
 
