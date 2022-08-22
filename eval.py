@@ -111,9 +111,8 @@ def main():
     ]
 
     for path in models:
-        tokenizer = GPT2Tokenizer.from_pretrained("models/gpt2-medium/multiwoz",
-                                                    padding_side="left", truncation_side="left")
-        model = GPT2LMHeadModel.from_pretrained("models/gpt2-medium/multiwoz")
+        tokenizer = GPT2Tokenizer.from_pretrained(path, padding_side="left", truncation_side="left")
+        model = GPT2LMHeadModel.from_pretrained(path)
         model.to(device)
 
         predicted = model_predict(model, device)
@@ -130,7 +129,7 @@ def main():
             p_tokens=original_tokenized,
             q_tokens=pred_tokenized,
             device_id=0, num_buckets=500, max_text_length=sizencode, mauve_scaling_factor=1)
-        print(model.name_or_path)
+        print(path)
         print(results["bleu"]["mwz22"], results["success"]["inform"]["total"], results["success"]["success"]["total"], sep=" & ")
         print(out.mauve, results["num_unigrams"], results["entropy"], sep=" & ")
 
