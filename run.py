@@ -1,7 +1,6 @@
 from train import mwoz, ta_encode, ta_noencode
 from utils import multiwoz, tripadvisor, tripadvisor_noencode
 
-EPOCHS = "40"
 TOKEN_LENGTH = "512"
 
 
@@ -10,9 +9,9 @@ FRACTION = [
 ]
 
 GPT_LIST = [
-    #("gpt2", "15000", "16", "4"),
-    #("gpt2-medium", "30000", "4", "16"),
-    ("gpt2-large", "100000", "1", "64"),
+    ("gpt2", "15000", "16", "4", "50"),
+    ("gpt2-medium", "30000", "4", "16", "80"),
+    #("gpt2-large", "100000", "2", "32", "120"),
     #("gpt2-xl", "500000"),
 ]
 
@@ -24,7 +23,7 @@ if __name__ == "__main__":
     # print("Processing multiwoz...")
     # multiwoz.generate_encoded()
 
-    for model_type, max_steps, BATCH_SIZE, GRAD_ACC in GPT_LIST:
+    for model_type, max_steps, BATCH_SIZE, GRAD_ACC, EPOCHS in GPT_LIST:
         # gpt-2 -> multiwoz
         mwoz.main([
             "--directory", f"models/{model_type}/multiwoz",
@@ -36,24 +35,24 @@ if __name__ == "__main__":
         ])
 
         # gpt-2 -> tripadvisor (with transform)
-        ta_encode.main([
-                "--directory", f"models/{model_type}/ta_encode",
-                "--checkpoint", f"{model_type}",
-                "--batch_size", BATCH_SIZE,
-                "--gradient_accumulation_steps", GRAD_ACC,
-                "--token_length", TOKEN_LENGTH,
-                "--max_steps", max_steps,
-        ])
+        # ta_encode.main([
+        #         "--directory", f"models/{model_type}/ta_encode",
+        #         "--checkpoint", f"{model_type}",
+        #         "--batch_size", BATCH_SIZE,
+        #         "--gradient_accumulation_steps", GRAD_ACC,
+        #         "--token_length", TOKEN_LENGTH,
+        #         "--max_steps", max_steps,
+        # ])
 
-        # gpt-2 -> tripadvisor (without tods transformation) -> multiwoz
-        ta_noencode.main([
-                "--directory", f"models/{model_type}/ta_noencode",
-                "--checkpoint", f"{model_type}",
-                "--batch_size", BATCH_SIZE,
-                "--gradient_accumulation_steps", GRAD_ACC,
-                "--token_length", TOKEN_LENGTH,
-                "--max_steps", max_steps,
-        ])
+        # # gpt-2 -> tripadvisor (without tods transformation) -> multiwoz
+        # ta_noencode.main([
+        #         "--directory", f"models/{model_type}/ta_noencode",
+        #         "--checkpoint", f"{model_type}",
+        #         "--batch_size", BATCH_SIZE,
+        #         "--gradient_accumulation_steps", GRAD_ACC,
+        #         "--token_length", TOKEN_LENGTH,
+        #         "--max_steps", max_steps,
+        # ])
 
         # gpt-2 -> tripadvisor (both) -> multiwoz
         for encode in ["encode", "noencode"]:
