@@ -5,7 +5,7 @@ import torch
 import argparse
 import numpy as np
 from transformers import GPT2Tokenizer, GPT2LMHeadModel
-from transformers import Trainer, TrainingArguments
+from transformers import Trainer, TrainingArguments, EarlyStoppingCallback
 from datasets import load_dataset
 
 torch.manual_seed(0)
@@ -95,7 +95,8 @@ def main(raw_args=None):
         warmup_steps=args.num_warmup_steps,
         num_train_epochs=args.num_train_epochs,
         report_to="mlflow",
-        save_strategy="no",
+        load_best_model_at_end=True,
+        save_total_limit = 5,
     )
 
     trainer = Trainer(
@@ -104,6 +105,7 @@ def main(raw_args=None):
         tokenizer=tokenizer,
         train_dataset=datasets["train"],
         eval_dataset=datasets["valid"],
+        callbacks = [EarlyStoppingCallback(early_stopping_patience=5)],
     )
 
     trainer.train()

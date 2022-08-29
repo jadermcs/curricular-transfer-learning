@@ -118,7 +118,6 @@ def main():
         predicted = model_predict(model, device)
         e = Evaluator(bleu=True, success=True, richness=True)
         results = e.evaluate(predicted)
-        print(results)
 
         pred_resp = np.random.choice(get_responses_list(predicted), 5000)
         pred_tokenized = tokenizer(pred_resp.tolist(),return_tensors="pt", truncation=True,
