@@ -23,7 +23,6 @@ if __name__ == "__main__":
     tripadvisor_noencode.main()
     print("Processing multiwoz...")
     multiwoz.generate_encoded()
-    exit()
 
     for model_type, max_steps, BATCH_SIZE, GRAD_ACC, EPOCHS in GPT_LIST:
         # gpt-2 -> multiwoz
