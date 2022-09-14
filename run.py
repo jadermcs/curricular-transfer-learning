@@ -36,25 +36,25 @@ if __name__ == "__main__":
             "--token_length", TOKEN_LENGTH,
         ])
 
-        # gpt-2 -> tripadvisor (with transform)
-        # ta_encode.main([
-        #         "--directory", f"models/{model_type}/ta_encode",
-        #         "--checkpoint", f"{model_type}",
-        #         "--batch_size", BATCH_SIZE,
-        #         "--gradient_accumulation_steps", GRAD_ACC,
-        #         "--token_length", TOKEN_LENGTH,
-        #         "--max_steps", max_steps,
-        # ])
+        gpt-2 -> tripadvisor (with transform)
+        ta_encode.main([
+                "--directory", f"models/{model_type}/ta_encode",
+                "--checkpoint", f"{model_type}",
+                "--batch_size", BATCH_SIZE,
+                "--gradient_accumulation_steps", GRAD_ACC,
+                "--token_length", TOKEN_LENGTH,
+                "--max_steps", max_steps,
+        ])
 
-        # # gpt-2 -> tripadvisor (without tods transformation) -> multiwoz
-        # ta_noencode.main([
-        #         "--directory", f"models/{model_type}/ta_noencode",
-        #         "--checkpoint", f"{model_type}",
-        #         "--batch_size", BATCH_SIZE,
-        #         "--gradient_accumulation_steps", GRAD_ACC,
-        #         "--token_length", TOKEN_LENGTH,
-        #         "--max_steps", max_steps,
-        # ])
+        # gpt-2 -> tripadvisor (without tods transformation) -> multiwoz
+        ta_noencode.main([
+                "--directory", f"models/{model_type}/ta_noencode",
+                "--checkpoint", f"{model_type}",
+                "--batch_size", BATCH_SIZE,
+                "--gradient_accumulation_steps", GRAD_ACC,
+                "--token_length", TOKEN_LENGTH,
+                "--max_steps", max_steps,
+        ])
 
         # gpt-2 -> tripadvisor (both) -> multiwoz
         for encode in ["encode", "noencode"]:
