@@ -1,4 +1,5 @@
 import torch
+import json
 from pprint import pprint
 from tqdm import tqdm
 import numpy as np
@@ -40,13 +41,12 @@ def main():
                 resp.append(turn["response"])
         return resp
 
-    import json
-    with open("venv/lib/python3.10/site-packages/mwzeval/data/gold_states.json") as fin:
-        data = json.load(fin)
-
     e = Evaluator(bleu=True, success=True, richness=True)
     results = e.evaluate(predicted)
     print(results)
+
+    with open("venv/lib/python3.10/site-packages/mwzeval/data/gold_states.json") as fin:
+        data = json.load(fin)
 
     original_resp = np.random.choice(get_responses_list(predicted), 5000)
 
@@ -110,6 +110,7 @@ def main():
         #"models/gpt2-large/ta_encode/multiwoz",
     ]
 
+    fout = open("metrics.txt", "w")
     for path in models:
         tokenizer = GPT2Tokenizer.from_pretrained(path, padding_side="left", truncation_side="left")
         model = GPT2LMHeadModel.from_pretrained(path)
@@ -128,9 +129,9 @@ def main():
             p_tokens=original_tokenized,
             q_tokens=pred_tokenized,
             device_id=0, num_buckets=500, max_text_length=sizencode, mauve_scaling_factor=1)
-        print(path)
-        print(results["bleu"]["mwz22"], results["success"]["inform"]["total"], results["success"]["success"]["total"], sep=" & ")
-        print(out.mauve, results["num_unigrams"], results["entropy"], sep=" & ")
+        print(path, file=fout)
+        print(results["bleu"]["mwz22"], results["success"]["inform"]["total"], results["success"]["success"]["total"], sep=" & ", file=fout)
+        print(out.mauve, results["richness"]["num_unigrams"], results["richness"]["entropy"], sep=" & ", file=fout)
 
 if __name__ == "__main__":
     main()
