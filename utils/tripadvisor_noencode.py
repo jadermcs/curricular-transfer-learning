@@ -4,13 +4,10 @@ import random
 import pathlib
 import numpy as np
 from tqdm import tqdm
+from .nlp import normalize_trip
 
 random.seed(43)
 MSG_MAX_SIZE = 1000
-
-def normalize(msg):
-    rm_spec = [x for x in msg if x in string.printable]
-    return " ".join(rm_spec)
 
 def main():
     path = pathlib.Path("data/tripadvisor/")
@@ -30,7 +27,9 @@ def main():
         for i, dialogue in enumerate(tqdm(data)):
             encode = {"id": f"{i}", "text": ""}
             for utt in dialogue["utterances"][:50*2]:
-                encode["text"] += " "+normalize(utt["utterance"][:MSG_MAX_SIZE].lower())
+                if utt["utterance"].startswith("This topic has been closed"):
+                    continue
+                encode["text"] += " "+normalize_trip(utt["utterance"][:MSG_MAX_SIZE].lower())
             if i % 9 != 0: ftrain.writelines(json.dumps(encode) + "\n")
             else:          fvalid.writelines(json.dumps(encode) + "\n")
 

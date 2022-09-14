@@ -4,13 +4,10 @@ import random
 import pathlib
 import numpy as np
 from tqdm import tqdm
+from .nlp import normalize_trip
 
 random.seed(43)
 MSG_MAX_SIZE = 1000
-
-def normalize(msg):
-    rm_spec = [x for x in msg if x in string.printable]
-    return " ".join(rm_spec)
 
 def main():
     path = pathlib.Path("data/tripadvisor/")
@@ -34,13 +31,15 @@ def main():
     sizes = []
     with trainpath.open("w") as ftrain, validpath.open("w") as fvalid:
         for i, dialogue in enumerate(tqdm(data)):
-            main = normalize(dialogue["utterances"][0]["utterance"][:MSG_MAX_SIZE]).lower()
+            main = normalize_trip(dialogue["utterances"][0]["utterance"][:MSG_MAX_SIZE]).lower()
             for turn, utt in enumerate(dialogue["utterances"][1:50]):
+                if utt["utterance"].startswith("This topic has been closed"):
+                    continue
                 encode = {"id": f"{i}-{turn}", "text": ""}
                 encode["text"] += "<sos_u>"+main+"<eos_u>"
                 encode["text"] += "<sos_b>"+dialogue["domain"].lower()+"<eos_b>"
                 encode["text"] += "<sos_a> <eos_a>"
-                encode["text"] += "<sos_r>"+normalize(utt["utterance"][:MSG_MAX_SIZE]).lower()+"<eos_r>"
+                encode["text"] += "<sos_r>"+normalize_trip(utt["utterance"][:MSG_MAX_SIZE]).lower()+"<eos_r>"
                 size = len(encode["text"])
                 sizes.append(len(encode["text"]))
                 if i % 9 != 0: ftrain.writelines(json.dumps(encode) + "\n")

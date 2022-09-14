@@ -2,6 +2,7 @@
 # coding=utf-8
 import torch
 import argparse
+from itertools import chain
 from transformers import GPT2Tokenizer, GPT2LMHeadModel
 from transformers import Trainer, TrainingArguments, EarlyStoppingCallback
 from datasets import load_dataset
@@ -63,7 +64,6 @@ def main(raw_args=None):
     def tokenizer_function(examples):
         res = tokenizer(examples["text"], truncation=True, padding="max_length",
                         max_length=args.token_length)
-        res['labels'] = res['input_ids'].copy()
         return res
 
     column_names = datasets["train"].column_names
@@ -74,6 +74,25 @@ def main(raw_args=None):
         batched=True,
         num_proc=8,
         remove_columns=column_names,
+    )
+
+    def group_texts(examples):
+        concatenated_examples = {k: list(chain(*examples[k])) for k in examples.keys()}
+        total_length = len(concatenated_examples[list(examples.keys())[0]])
+        if total_length >= args.token_length:
+            total_length = (total_length // args.token_length) * args.token_length
+        res = {
+            k: [t[i : i + args.token_length] for i in range(0, total_length, args.token_length)]
+            for k, t in concatenated_examples.items()
+        }
+        res['labels'] = res['input_ids'].copy()
+        return res
+
+    print("Grouping data.")
+    datasets = datasets.map(
+        group_texts,
+        batched=True,
+        num_proc=4,
     )
 
     training_args = TrainingArguments(
