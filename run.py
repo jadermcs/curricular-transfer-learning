@@ -36,7 +36,7 @@ if __name__ == "__main__":
             "--token_length", TOKEN_LENGTH,
         ])
 
-        gpt-2 -> tripadvisor (with transform)
+        # gpt-2 -> tripadvisor (with transform)
         ta_encode.main([
                 "--directory", f"models/{model_type}/ta_encode",
                 "--checkpoint", f"{model_type}",
