@@ -92,7 +92,7 @@ def main(raw_args=None):
     datasets = datasets.map(
         group_texts,
         batched=True,
-        num_proc=4,
+        num_proc=8,
     )
 
     training_args = TrainingArguments(

@@ -4,11 +4,12 @@
 #PBS -o ctl.out
 #PBS -e ctl.err
 #PBS -l walltime=1:00:00
-#PBS -l select=1:ncpus=10:ngpus=4:Qlist=Allnodes
+#PBS -l select=1:ncpus=10:ngpus=2:Qlist=Allnodes
 source /etc/profile.d/modules.sh
 module load python/python3-10
 module load cuda/cuda-10.1
 echo "Inicio: "`date`
+cd /home/jreis/curricular-transfer-learning
 source venv/bin/activate
 python run.py
 echo "Fim: " `date`
