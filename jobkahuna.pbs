@@ -3,7 +3,7 @@
 #PBS -N CTL
 #PBS -o ctl.out
 #PBS -e ctl.err
-#PBS -l walltime=1:00:00
+#PBS -l walltime=20:00:00
 #PBS -l select=1:ncpus=10:ngpus=2:Qlist=Allnodes
 source /etc/profile.d/modules.sh
 module load python/python3-10
