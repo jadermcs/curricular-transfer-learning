@@ -45,22 +45,7 @@ def main():
     results = e.evaluate(predicted)
     print(results)
 
-    with open("venv/lib/python3.10/site-packages/mwzeval/data/gold_states.json") as fin:
-        data = json.load(fin)
-
     original_resp = np.random.choice(get_responses_list(predicted), 5000)
-
-    counter = 0
-    for key in predicted:
-        for i, value in enumerate(predicted[key]):
-            if value["state"] != data[key][i]:
-                counter += 1
-                print(key, i)
-                pprint(value["response"])
-                pprint(value["state"])
-                pprint(data[key][i])
-    if not counter:
-        print("100% matched")
 
     def model_predict(model, device):
         predicted = {}
