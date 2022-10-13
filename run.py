@@ -10,7 +10,7 @@ FRACTION = [
 ]
 
 GPT_LIST = [
-    ("distilgpt2", "60000", "16", "4", "200"),
+    ("distilgpt2", "120000", "16", "4", "200"),
     # ("gpt2", "60000", "16", "4", "200"),
     # ("gpt2-medium", "120000", "4", "16", "200"),
     #("gpt2-large", "100000", "2", "32", "200"),
@@ -68,16 +68,16 @@ if __name__ == "__main__":
         #     ])
 
         # gpt-2 -> tripadvisor -> multiwoz (low resource setting)
-        # for frac in FRACTION:
-        #     mwoz.main([
-        #         "--directory", f"models/{model_type}/ta_encode/sgd/multiwoz_{frac}",
-        #         "--checkpoint", f"models/{model_type}/ta_encode/sgd",
-        #         "--num_train_epochs", EPOCHS,
-        #         "--batch_size", BATCH_SIZE,
-        #         "--gradient_accumulation_steps", GRAD_ACC,
-        #         "--token_length", TOKEN_LENGTH,
-        #         "--percent", frac,
-        #     ])
+        for frac in FRACTION:
+            mwoz.main([
+                "--directory", f"models/{model_type}/ta_encode/multiwoz_{frac}",
+                "--checkpoint", f"models/{model_type}/ta_encode/",
+                "--num_train_epochs", EPOCHS,
+                "--batch_size", BATCH_SIZE,
+                "--gradient_accumulation_steps", GRAD_ACC,
+                "--token_length", TOKEN_LENGTH,
+                "--percent", frac,
+            ])
     #run evaluation
     main_eval()
 
