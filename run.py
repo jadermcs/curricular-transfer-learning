@@ -69,8 +69,8 @@ if __name__ == "__main__":
         # gpt-2 -> tripadvisor -> multiwoz (low resource setting)
         for frac in FRACTION:
             mwoz.main([
-                "--directory", f"models/{model_type}/ta_encode/multiwoz_{frac}",
-                "--checkpoint", f"models/{model_type}/ta_encode/",
+                "--directory", f"/home/jader/models/{model_type}/ta_encode/multiwoz_{frac}",
+                "--checkpoint", f"/home/jader/models/{model_type}/ta_encode/",
                 "--num_train_epochs", EPOCHS,
                 "--batch_size", BATCH_SIZE,
                 "--gradient_accumulation_steps", GRAD_ACC,
