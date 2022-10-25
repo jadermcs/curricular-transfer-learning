@@ -67,8 +67,8 @@ def main():
                 pad_token_id=tokenizer.eos_token_id,
                 eos_token_id=tokenizer.encode("<eos_r>")[0]
             )
-            state = {}
             for gen in generate:
+                state = {}
                 gen = tokenizer.decode(gen)
                 response = gen.split("<sos_r>")[-1].split("<eos_r>")[0].strip()
                 for k,v in parse_state(gen.split("<sos_b>")[-1].split("<eos_b>")[0].strip()):
@@ -87,9 +87,9 @@ def main():
         "models/gpt2/multiwoz",
         "models/gpt2/ta_noencode/multiwoz",
         "models/gpt2/ta_encode/multiwoz",
-        "models/gpt2-medium/multiwoz",
-        "models/gpt2-medium/ta_noencode/multiwoz",
-        "models/gpt2-medium/ta_encode/multiwoz",
+        #"models/gpt2-medium/multiwoz",
+        #"models/gpt2-medium/ta_noencode/multiwoz",
+        #"models/gpt2-medium/ta_encode/multiwoz",
         #"models/gpt2-large/multiwoz",
         #"models/gpt2-large/ta_noencode/multiwoz",
         #"models/gpt2-large/ta_encode/multiwoz",
