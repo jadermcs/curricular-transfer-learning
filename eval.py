@@ -51,11 +51,11 @@ def main():
         predicted = {}
         for batch in tqdm(datasets["test"]):
             did = batch["id"].lower().rstrip(".json")
-            utterances = batch["text"].split("<sos_r>")
+            utterances = batch["text"].split("<sos_b>")
             predicted[did] = []
             responses = []
             for i in range(len(utterances)-1):
-                example = "<sos_r>".join(utterances[:i+1])[-sizencode:]
+                example = "<sos_b>".join(utterances[:i+1])[-sizencode:]
                 responses.append(example)
             encode = tokenizer(responses, return_tensors="pt", truncation=True,
                                 padding=True, max_length=sizencode)
