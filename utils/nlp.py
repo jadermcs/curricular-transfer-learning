@@ -21,8 +21,11 @@ def parse_state(belief):
         slots = slots.split("#")
         slotsdict = {}
         for slot in slots[1:]:
-            k,v = slot.split(" ", 1)
-            slotsdict[k] = v.strip()
+            try:
+                k,v = slot.split(" ", 1)
+                slotsdict[k] = v.strip()
+            except:
+                pass
         parse.append((intent, slotsdict))
     return parse
 
