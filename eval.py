@@ -51,22 +51,23 @@ def main():
         predicted = {}
         for batch in tqdm(datasets["test"]):
             did = batch["id"].lower().rstrip(".json")
-            utterances = batch["text"].split("<sos_b>")
+            utterances = batch["text"].split("<sos_r>")
             predicted[did] = []
             responses = []
             for i in range(len(utterances)-1):
-                example = "<sos_b>".join(utterances[:i+1])[-sizencode:]
+                example = "<sos_r>".join(utterances[:i+1])[-sizencode:]
                 responses.append(example)
             encode = tokenizer(responses, return_tensors="pt", truncation=True,
                                 padding=True, max_length=sizencode)
-            encode = {k:v.to(device) for k,v in encode.items()}
-            generate = model.generate(
-                **encode,
-                max_new_tokens=80,
-                temperature=0.7,
-                pad_token_id=tokenizer.eos_token_id,
-                eos_token_id=tokenizer.encode("<eos_r>")[0]
-            )
+            with torch.no_grad():
+                encode = {k:v.to(device) for k,v in encode.items()}
+                generate = model.generate(
+                    **encode,
+                    max_new_tokens=80,
+                    temperature=0.7,
+                    pad_token_id=tokenizer.eos_token_id,
+                    eos_token_id=tokenizer.encode("<eos_r>")[0]
+                )
             for gen in generate:
                 state = {}
                 gen = tokenizer.decode(gen)
@@ -87,12 +88,12 @@ def main():
         "models/gpt2/multiwoz",
         "models/gpt2/ta_noencode/multiwoz",
         "models/gpt2/ta_encode/multiwoz",
-        #"models/gpt2-medium/multiwoz",
-        #"models/gpt2-medium/ta_noencode/multiwoz",
-        #"models/gpt2-medium/ta_encode/multiwoz",
-        #"models/gpt2-large/multiwoz",
-        #"models/gpt2-large/ta_noencode/multiwoz",
-        #"models/gpt2-large/ta_encode/multiwoz",
+        "models/gpt2-medium/multiwoz",
+        "models/gpt2-medium/ta_noencode/multiwoz",
+        "models/gpt2-medium/ta_encode/multiwoz",
+        "models/gpt2-large/multiwoz",
+        "models/gpt2-large/ta_noencode/multiwoz",
+        "models/gpt2-large/ta_encode/multiwoz",
     ]
 
     fout = open("metrics.txt", "w")
