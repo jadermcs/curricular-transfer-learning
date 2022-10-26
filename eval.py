@@ -122,7 +122,7 @@ def main():
         #    device_id=0, num_buckets=500, max_text_length=sizencode, mauve_scaling_factor=1)
         combined = results["bleu"]["mwz22"]+.5*(results["success"]["inform"]["total"]+results["success"]["success"]["total"])
         print(path, file=fout)
-        print(results["bleu"]["mwz22"], results["success"]["inform"]["total"], results["success"]["success"]["total"], combined),sep=" & ", file=fout)
+        print(results["bleu"]["mwz22"], results["success"]["inform"]["total"], results["success"]["success"]["total"], combined,sep=" & ", file=fout)
         #print(out.mauve, results["richness"]["num_unigrams"], results["richness"]["entropy"], sep=" & ", file=fout)
 
 if __name__ == "__main__":
