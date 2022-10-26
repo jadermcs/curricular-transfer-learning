@@ -111,18 +111,19 @@ def main():
         e = Evaluator(bleu=True, success=True, richness=True)
         results = e.evaluate(predicted)
 
-        pred_resp = np.random.choice(get_responses_list(predicted), 5000)
-        pred_tokenized = tokenizer(pred_resp.tolist(),return_tensors="pt", truncation=True,
-                                    padding=True, max_length=sizencode).input_ids
-        original_tokenized = tokenizer(original_resp.tolist(),return_tensors="pt", truncation=True,
-                                        padding=True, max_length=sizencode).input_ids
-        out = compute_mauve(
-            p_tokens=original_tokenized,
-            q_tokens=pred_tokenized,
-            device_id=0, num_buckets=500, max_text_length=sizencode, mauve_scaling_factor=1)
+        #pred_resp = np.random.choice(get_responses_list(predicted), 5000)
+        #pred_tokenized = tokenizer(pred_resp.tolist(),return_tensors="pt", truncation=True,
+        #                            padding=True, max_length=sizencode).input_ids
+        #original_tokenized = tokenizer(original_resp.tolist(),return_tensors="pt", truncation=True,
+        #                                padding=True, max_length=sizencode).input_ids
+        #out = compute_mauve(
+        #    p_tokens=original_tokenized,
+        #    q_tokens=pred_tokenized,
+        #    device_id=0, num_buckets=500, max_text_length=sizencode, mauve_scaling_factor=1)
+        combined = results["bleu"]["mwz22"]+.5*(results["success"]["inform"]["total"]+results["success"]["success"]["total"])
         print(path, file=fout)
-        print(results["bleu"]["mwz22"], results["success"]["inform"]["total"], results["success"]["success"]["total"], sep=" & ", file=fout)
-        print(out.mauve, results["richness"]["num_unigrams"], results["richness"]["entropy"], sep=" & ", file=fout)
+        print(results["bleu"]["mwz22"], results["success"]["inform"]["total"], results["success"]["success"]["total"], combined),sep=" & ", file=fout)
+        #print(out.mauve, results["richness"]["num_unigrams"], results["richness"]["entropy"], sep=" & ", file=fout)
 
 if __name__ == "__main__":
     main()
