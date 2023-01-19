@@ -31,15 +31,19 @@ def main():
     sizes = []
     with trainpath.open("w") as ftrain, validpath.open("w") as fvalid:
         for i, dialogue in enumerate(tqdm(data)):
-            main = normalize_trip(dialogue["utterances"][0]["utterance"][:MSG_MAX_SIZE]).lower()
+            main = normalize_trip(dialogue["utterances"][0]["utterance"][:MSG_MAX_SIZE])
             for turn, utt in enumerate(dialogue["utterances"][1:50]):
                 if utt["utterance"].startswith("This topic has been closed"):
                     continue
-                encode = {"id": f"{i}-{turn}", "text": ""}
+                encode = {
+                        "id": f"{i}-{turn}",
+                        "url": dialogue["url"],
+                        "text": ""
+                        }
                 encode["text"] += "<sos_u>"+main+"<eos_u>"
-                encode["text"] += "<sos_b>"+dialogue["domain"].lower()+"<eos_b>"
+                encode["text"] += "<sos_b>"+dialogue["domain"].split()[0].lower()+"<eos_b>"
                 encode["text"] += "<sos_a> <eos_a>"
-                encode["text"] += "<sos_r>"+normalize_trip(utt["utterance"][:MSG_MAX_SIZE]).lower()+"<eos_r>"
+                encode["text"] += "<sos_r>"+normalize_trip(utt["utterance"][:MSG_MAX_SIZE])+"<eos_r>"
                 size = len(encode["text"])
                 sizes.append(len(encode["text"]))
                 if i % 9 != 0: ftrain.writelines(json.dumps(encode) + "\n")

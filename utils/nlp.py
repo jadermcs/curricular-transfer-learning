@@ -135,7 +135,7 @@ def normalize_trip(text):
     # lower case every word
     text = text.lower()
     # remove urls
-    text = re.sub(r'(https|http)?:\/\/(\w|\.|\/|\?|\=|\&|\%)*\b', '', text, flags=re.MULTILINE)
+    text = re.sub(r'(https|http)?:\/\/(\w|\.|\/|\?|\=|\&|\%|\-)*\b', '', text, flags=re.MULTILINE)
 
     # replace white spaces in front and end
     text = re.sub(r'^\s*|\s*$', '', text)
