@@ -20,9 +20,9 @@ def main(label=True):
     data = []
     
     (path/"train").mkdir(exist_ok=True)
-    trainpath = path/"train/encoded.json"
+    trainpath = path/(f"train/encoded{}.json" % ("" if label else "_nolabel"))
     (path/"valid").mkdir(exist_ok=True)
-    validpath = path/"valid/encoded.json"
+    validpath = path/(f"valid/encoded{}.json" % ("" if label else "_nolabel"))
 
     with (path/"dialogues.jl").open() as fin:
         for line in fin.readlines():
@@ -41,10 +41,8 @@ def main(label=True):
                         "text": ""
                         }
                 encode["text"] += "<sos_u>"+main+"<eos_u>"
-                if label:
-                    encode["text"] += "<sos_b>"+dialogue["domain"].split()[0].lower()+"<eos_b>"
-                else:
-                    encode["text"] += "<sos_b> <eos_b>"
+                if label: encode["text"] += "<sos_b>"+dialogue["domain"].split()[0].lower()+"<eos_b>"
+                else: encode["text"] += "<sos_b> <eos_b>"
 
                 encode["text"] += "<sos_a> <eos_a>"
                 encode["text"] += "<sos_r>"+normalize_trip(utt["utterance"][:MSG_MAX_SIZE])+"<eos_r>"
