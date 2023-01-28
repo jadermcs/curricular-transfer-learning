@@ -42,15 +42,24 @@ def main(raw_args=None):
         help="Number of updates steps to accumulate for a backward/update pass.")
     parser.add_argument("--num_warmup_steps", type=int, default=1,
         help="Number of steps for the warmup in the lr scheduler.")
+    parser.add_argument("--pseudo-intent", action="store_true", dest="intent",
+        help="If should perform pseudo intent detection.")
+    parser.set_defaults(intent=False)
     args = parser.parse_args(raw_args)
 
     tokenizer = GPT2Tokenizer.from_pretrained(args.checkpoint)
     model = GPT2LMHeadModel.from_pretrained(args.checkpoint)
 
-    datasets = load_dataset("json", data_files={
-        "train": "data/tripadvisor/train/encoded.json",
-        "valid": "data/tripadvisor/valid/encoded.json"
-    })
+    if args.intent:
+        datasets = load_dataset("json", data_files={
+            "train": "data/tripadvisor/train/encoded.json",
+            "valid": "data/tripadvisor/valid/encoded.json"
+        })
+    else:
+        datasets = load_dataset("json", data_files={
+            "train": "data/tripadvisor/train/encoded_nolabel.json",
+            "valid": "data/tripadvisor/valid/encoded_nolabel.json"
+        })
 
     datasets = datasets.shuffle(seed=SEED)
     datasets["valid"] = datasets["valid"].select(range(5000))

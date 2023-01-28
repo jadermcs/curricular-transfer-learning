@@ -9,7 +9,7 @@ from .nlp import normalize_trip
 random.seed(43)
 MSG_MAX_SIZE = 1000
 
-def main():
+def main(label=True):
     path = pathlib.Path("data/tripadvisor/")
     # nlp = spacy.load("en_core_web_sm")
     schema = path/"schema.txt"
@@ -41,7 +41,11 @@ def main():
                         "text": ""
                         }
                 encode["text"] += "<sos_u>"+main+"<eos_u>"
-                encode["text"] += "<sos_b>"+dialogue["domain"].split()[0].lower()+"<eos_b>"
+                if label:
+                    encode["text"] += "<sos_b>"+dialogue["domain"].split()[0].lower()+"<eos_b>"
+                else:
+                    encode["text"] += "<sos_b> <eos_b>"
+
                 encode["text"] += "<sos_a> <eos_a>"
                 encode["text"] += "<sos_r>"+normalize_trip(utt["utterance"][:MSG_MAX_SIZE])+"<eos_r>"
                 size = len(encode["text"])
