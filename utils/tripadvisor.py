@@ -20,9 +20,9 @@ def main(label=True):
     data = []
     
     (path/"train").mkdir(exist_ok=True)
-    trainpath = path/(f"train/encoded{}" % (".json" if label else "_nolabel.json"))
+    trainpath = path/(f"train/encoded{}".format(".json" if label else "_nolabel.json"))
     (path/"valid").mkdir(exist_ok=True)
-    validpath = path/(f"valid/encoded{}" % (".json" if label else "_nolabel.json"))
+    validpath = path/(f"valid/encoded{}".format(".json" if label else "_nolabel.json"))
 
     with (path/"dialogues.jl").open() as fin:
         for line in fin.readlines():
