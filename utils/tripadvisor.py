@@ -5,17 +5,24 @@ import pathlib
 import numpy as np
 from tqdm import tqdm
 from .nlp import normalize_trip
+from joblib import Memory
 
 random.seed(43)
 MSG_MAX_SIZE = 1000
+memory = Memory("./cache")
+
+@memory.cache
+def encode(dialogue, utt, label=True):
+    encoded = ""
+    encode["text"] += "<sos_u>"+dialogue["main"]+"<eos_u>"
+    if label: encode += "<sos_b>"+dialogue["domain"].split()[0].lower()+"<eos_b>"
+    else: encode += "<sos_b> <eos_b>"
+    encode += "<sos_a> <eos_a>"
+    encode += "<sos_r>"+normalize_trip(utt["utterance"][:MSG_MAX_SIZE])+"<eos_r>"
+    return encoded
 
 def main(label=True):
     path = pathlib.Path("data/tripadvisor/")
-    # nlp = spacy.load("en_core_web_sm")
-    schema = path/"schema.txt"
-    schema.touch(exist_ok=True)
-    # with schema.open("w") as fin:
-    #     fin.write("ORG")
 
     data = []
     
@@ -35,17 +42,12 @@ def main(label=True):
             for turn, utt in enumerate(dialogue["utterances"][1:50]):
                 if utt["utterance"].startswith("This topic has been closed"):
                     continue
+                dialogue["main"] = main
                 encode = {
                         "id": f"{i}-{turn}",
                         "url": dialogue["url"],
-                        "text": ""
+                        "text": encode(dialogue, utt, label),
                         }
-                encode["text"] += "<sos_u>"+main+"<eos_u>"
-                if label: encode["text"] += "<sos_b>"+dialogue["domain"].split()[0].lower()+"<eos_b>"
-                else: encode["text"] += "<sos_b> <eos_b>"
-
-                encode["text"] += "<sos_a> <eos_a>"
-                encode["text"] += "<sos_r>"+normalize_trip(utt["utterance"][:MSG_MAX_SIZE])+"<eos_r>"
                 size = len(encode["text"])
                 sizes.append(len(encode["text"]))
                 if i % 9 != 0: ftrain.writelines(json.dumps(encode) + "\n")
