@@ -68,7 +68,7 @@ if __name__ == "__main__":
         #         "--max_steps", max_steps,
         # ])
 
-        gpt-2 -> tripadvisor (both) -> multiwoz
+        # gpt-2 -> tripadvisor (both) -> multiwoz
         for encode in ["encode", "noencode", "encode_nolabel"]:
             mwoz.main([
                 "--directory", f"models/{model_type}/ta_{encode}/multiwoz",
