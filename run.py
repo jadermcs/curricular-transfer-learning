@@ -27,57 +27,57 @@ if __name__ == "__main__":
     multiwoz.generate_encoded()
 
     for model_type, max_steps, BATCH_SIZE, GRAD_ACC, EPOCHS in GPT_LIST:
-        # gpt-2 -> multiwoz
-        # mwoz.main([
-        #     "--directory", f"models/{model_type}/multiwoz",
-        #     "--checkpoint", f"{model_type}",
-        #     "--num_train_epochs", EPOCHS,
-        #     "--batch_size", BATCH_SIZE,
-        #     "--gradient_accumulation_steps", GRAD_ACC,
-        #     "--token_length", TOKEN_LENGTH,
-        # ])
-
-        # gpt-2 -> tripadvisor (with transform and label)
-        ta_encode.main([
-                "--pseudo-intent",
-                "--directory", f"models/{model_type}/ta_encode",
-                "--checkpoint", f"{model_type}",
-                "--batch_size", BATCH_SIZE,
-                "--gradient_accumulation_steps", GRAD_ACC,
-                "--token_length", TOKEN_LENGTH,
-                "--max_steps", max_steps,
+        gpt-2 -> multiwoz
+        mwoz.main([
+            "--directory", f"models/{model_type}/multiwoz",
+            "--checkpoint", f"{model_type}",
+            "--num_train_epochs", EPOCHS,
+            "--batch_size", BATCH_SIZE,
+            "--gradient_accumulation_steps", GRAD_ACC,
+            "--token_length", TOKEN_LENGTH,
         ])
 
-        # gpt-2 -> tripadvisor (with transform no label)
-        ta_encode.main([
-                "--directory", f"models/{model_type}/ta_encode_nolabel",
-                "--checkpoint", f"{model_type}",
-                "--batch_size", BATCH_SIZE,
-                "--gradient_accumulation_steps", GRAD_ACC,
-                "--token_length", TOKEN_LENGTH,
-                "--max_steps", max_steps,
-        ])
-
-        # gpt-2 -> tripadvisor (without tods transformation) -> multiwoz
-        ta_noencode.main([
-                "--directory", f"models/{model_type}/ta_noencode",
-                "--checkpoint", f"{model_type}",
-                "--batch_size", BATCH_SIZE,
-                "--gradient_accumulation_steps", GRAD_ACC,
-                "--token_length", TOKEN_LENGTH,
-                "--max_steps", max_steps,
-        ])
-
-        # gpt-2 -> tripadvisor (both) -> multiwoz
-        # for encode in ["encode", "noencode"]:
-        #     mwoz.main([
-        #         "--directory", f"models/{model_type}/ta_{encode}/multiwoz",
-        #         "--checkpoint", f"models/{model_type}/ta_{encode}",
-        #         "--num_train_epochs", EPOCHS,
+        # # gpt-2 -> tripadvisor (with transform and label)
+        # ta_encode.main([
+        #         "--pseudo-intent",
+        #         "--directory", f"models/{model_type}/ta_encode",
+        #         "--checkpoint", f"{model_type}",
         #         "--batch_size", BATCH_SIZE,
         #         "--gradient_accumulation_steps", GRAD_ACC,
         #         "--token_length", TOKEN_LENGTH,
-        #     ])
+        #         "--max_steps", max_steps,
+        # ])
+
+        # # gpt-2 -> tripadvisor (with transform no label)
+        # ta_encode.main([
+        #         "--directory", f"models/{model_type}/ta_encode_nolabel",
+        #         "--checkpoint", f"{model_type}",
+        #         "--batch_size", BATCH_SIZE,
+        #         "--gradient_accumulation_steps", GRAD_ACC,
+        #         "--token_length", TOKEN_LENGTH,
+        #         "--max_steps", max_steps,
+        # ])
+
+        # # gpt-2 -> tripadvisor (without tods transformation) -> multiwoz
+        # ta_noencode.main([
+        #         "--directory", f"models/{model_type}/ta_noencode",
+        #         "--checkpoint", f"{model_type}",
+        #         "--batch_size", BATCH_SIZE,
+        #         "--gradient_accumulation_steps", GRAD_ACC,
+        #         "--token_length", TOKEN_LENGTH,
+        #         "--max_steps", max_steps,
+        # ])
+
+        gpt-2 -> tripadvisor (both) -> multiwoz
+        for encode in ["encode", "noencode", "encode_nolabel"]:
+            mwoz.main([
+                "--directory", f"models/{model_type}/ta_{encode}/multiwoz",
+                "--checkpoint", f"models/{model_type}/ta_{encode}",
+                "--num_train_epochs", EPOCHS,
+                "--batch_size", BATCH_SIZE,
+                "--gradient_accumulation_steps", GRAD_ACC,
+                "--token_length", TOKEN_LENGTH,
+            ])
 
         # gpt-2 -> multiwoz (low resource setting)
         # for frac in FRACTION:
