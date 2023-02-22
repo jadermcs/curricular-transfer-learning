@@ -27,7 +27,7 @@ if __name__ == "__main__":
     multiwoz.generate_encoded()
 
     for model_type, max_steps, BATCH_SIZE, GRAD_ACC, EPOCHS in GPT_LIST:
-        gpt-2 -> multiwoz
+        # gpt-2 -> multiwoz
         mwoz.main([
             "--directory", f"models/{model_type}/multiwoz",
             "--checkpoint", f"{model_type}",
