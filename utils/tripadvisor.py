@@ -11,11 +11,11 @@ MSG_MAX_SIZE = 1000
 
 def sequence_encode(dialogue, utt, label=True):
     encoded = ""
-    encode["text"] += "<sos_u>"+dialogue["main"]+"<eos_u>"
-    if label: encode += "<sos_b>"+dialogue["domain"].split()[0].lower()+"<eos_b>"
-    else: encode += "<sos_b> <eos_b>"
-    encode += "<sos_a> <eos_a>"
-    encode += "<sos_r>"+normalize_trip(utt["utterance"][:MSG_MAX_SIZE])+"<eos_r>"
+    encoded += "<sos_u>"+dialogue["main"]+"<eos_u>"
+    if label: encoded += "<sos_b>"+dialogue["domain"].split()[0].lower()+"<eos_b>"
+    else: encoded += "<sos_b> <eos_b>"
+    encoded += "<sos_a> <eos_a>"
+    encoded += "<sos_r>"+normalize_trip(utt["utterance"][:MSG_MAX_SIZE])+"<eos_r>"
     return encoded
 
 def main(label=True):
