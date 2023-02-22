@@ -5,13 +5,10 @@ import pathlib
 import numpy as np
 from tqdm import tqdm
 from .nlp import normalize_trip
-from joblib import Memory
 
 random.seed(43)
 MSG_MAX_SIZE = 1000
-memory = Memory("./cache")
 
-@memory.cache
 def encode(dialogue, utt, label=True):
     encoded = ""
     encode["text"] += "<sos_u>"+dialogue["main"]+"<eos_u>"
@@ -25,7 +22,7 @@ def main(label=True):
     path = pathlib.Path("data/tripadvisor/")
 
     data = []
-    
+
     (path/"train").mkdir(exist_ok=True)
     trainpath = path/("train/encoded{}".format(".json" if label else "_nolabel.json"))
     (path/"valid").mkdir(exist_ok=True)
