@@ -9,7 +9,7 @@ from .nlp import normalize_trip
 random.seed(43)
 MSG_MAX_SIZE = 1000
 
-def encode(dialogue, utt, label=True):
+def sequence_encode(dialogue, utt, label=True):
     encoded = ""
     encode["text"] += "<sos_u>"+dialogue["main"]+"<eos_u>"
     if label: encode += "<sos_b>"+dialogue["domain"].split()[0].lower()+"<eos_b>"
@@ -43,7 +43,7 @@ def main(label=True):
                 encode = {
                         "id": f"{i}-{turn}",
                         "url": dialogue["url"],
-                        "text": encode(dialogue, utt, label),
+                        "text": sequence_encode(dialogue, utt, label),
                         }
                 size = len(encode["text"])
                 sizes.append(len(encode["text"]))
