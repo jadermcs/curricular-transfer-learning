@@ -99,10 +99,10 @@ def main():
         # "models/gpt2-large/ta_noencode/multiwoz",
         # "models/gpt2-large/ta_encode/multiwoz",
     ]
-    tmp = []
-    for name in models:
-        for percent in [5,10,20,50]:
-            tmp.append(f"{name}_{percent}")
+    # tmp = []
+    # for name in models:
+    #     for percent in [5,10,20,50]:
+    #         tmp.append(f"{name}_{percent}")
     models = tmp
 
     fout = open("metrics2.txt", "w")
