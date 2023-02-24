@@ -85,15 +85,19 @@ def main():
         return predicted
 
     models = [
-        "models/gpt2/multiwoz",
-        "models/gpt2/ta_noencode/multiwoz",
-        "models/gpt2/ta_encode/multiwoz",
-        "models/gpt2-medium/multiwoz",
-        "models/gpt2-medium/ta_noencode/multiwoz",
-        "models/gpt2-medium/ta_encode/multiwoz",
-        "models/gpt2-large/multiwoz",
-        "models/gpt2-large/ta_noencode/multiwoz",
-        "models/gpt2-large/ta_encode/multiwoz",
+        "models/distillgpt2/multiwoz",
+        "models/distillgpt2/ta_noencode/multiwoz",
+        "models/distillgpt2/ta_encode_nolabel/multiwoz",
+        "models/distillgpt2/ta_encode/multiwoz",
+        # "models/gpt2/multiwoz",
+        # "models/gpt2/ta_noencode/multiwoz",
+        # "models/gpt2/ta_encode/multiwoz",
+        # "models/gpt2-medium/multiwoz",
+        # "models/gpt2-medium/ta_noencode/multiwoz",
+        # "models/gpt2-medium/ta_encode/multiwoz",
+        # "models/gpt2-large/multiwoz",
+        # "models/gpt2-large/ta_noencode/multiwoz",
+        # "models/gpt2-large/ta_encode/multiwoz",
     ]
     tmp = []
     for name in models:
