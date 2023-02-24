@@ -103,7 +103,7 @@ def main():
     # for name in models:
     #     for percent in [5,10,20,50]:
     #         tmp.append(f"{name}_{percent}")
-    models = tmp
+    # models = tmp
 
     fout = open("metrics2.txt", "w")
     for path in models:
