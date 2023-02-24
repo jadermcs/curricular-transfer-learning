@@ -85,10 +85,10 @@ def main():
         return predicted
 
     models = [
-        "models/distillgpt2/multiwoz",
-        "models/distillgpt2/ta_noencode/multiwoz",
-        "models/distillgpt2/ta_encode_nolabel/multiwoz",
-        "models/distillgpt2/ta_encode/multiwoz",
+        "models/distilgpt2/multiwoz",
+        "models/distilgpt2/ta_noencode/multiwoz",
+        "models/distilgpt2/ta_encode_nolabel/multiwoz",
+        "models/distilgpt2/ta_encode/multiwoz",
         # "models/gpt2/multiwoz",
         # "models/gpt2/ta_noencode/multiwoz",
         # "models/gpt2/ta_encode/multiwoz",
