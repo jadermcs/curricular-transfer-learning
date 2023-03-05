@@ -89,15 +89,15 @@ def main():
         "models/distilgpt2/ta_noencode/multiwoz",
         "models/distilgpt2/ta_encode_nolabel/multiwoz",
         "models/distilgpt2/ta_encode/multiwoz",
-        # "models/gpt2/multiwoz",
-        # "models/gpt2/ta_noencode/multiwoz",
-        # "models/gpt2/ta_encode/multiwoz",
-        # "models/gpt2-medium/multiwoz",
-        # "models/gpt2-medium/ta_noencode/multiwoz",
-        # "models/gpt2-medium/ta_encode/multiwoz",
-        # "models/gpt2-large/multiwoz",
-        # "models/gpt2-large/ta_noencode/multiwoz",
-        # "models/gpt2-large/ta_encode/multiwoz",
+        "models/gpt2/multiwoz",
+        "models/gpt2/ta_noencode/multiwoz",
+        "models/gpt2/ta_encode/multiwoz",
+        "models/gpt2-medium/multiwoz",
+        "models/gpt2-medium/ta_noencode/multiwoz",
+        "models/gpt2-medium/ta_encode/multiwoz",
+        "models/gpt2-large/multiwoz",
+        "models/gpt2-large/ta_noencode/multiwoz",
+        "models/gpt2-large/ta_encode/multiwoz",
     ]
     # tmp = []
     # for name in models:
@@ -105,7 +105,7 @@ def main():
     #         tmp.append(f"{name}_{percent}")
     # models = tmp
 
-    fout = open("metrics2.txt", "w")
+    fout = open("metrics1.txt", "w")
     for path in models:
         tokenizer = GPT2Tokenizer.from_pretrained(path, padding_side="left", truncation_side="left")
         model = GPT2LMHeadModel.from_pretrained(path)
