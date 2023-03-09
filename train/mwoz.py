@@ -1,15 +1,14 @@
 #!/usr/bin/env python
 # coding=utf-8
-import json
 import torch
 import argparse
-import numpy as np
-from transformers import GPT2Tokenizer, GPT2LMHeadModel
+from transformers import AutoTokenizer, AutoModelForCausalLM
 from transformers import Trainer, TrainingArguments, EarlyStoppingCallback
 from datasets import load_dataset
 
 torch.manual_seed(0)
 SEED = 42
+
 
 def get_special_tokens():
     base = ["<sos_u>", "<eos_u>", "<sos_b>", "<eos_b>",
@@ -19,6 +18,7 @@ def get_special_tokens():
     for token in data:
         base.append(token.strip())
     return base
+
 
 def main(raw_args=None):
     parser = argparse.ArgumentParser(description="Finetune a transformers "
@@ -42,8 +42,8 @@ def main(raw_args=None):
         help="Number of steps for the warmup in the lr scheduler.")
     args = parser.parse_args(raw_args)
 
-    tokenizer = GPT2Tokenizer.from_pretrained(args.checkpoint)
-    model = GPT2LMHeadModel.from_pretrained(args.checkpoint)
+    tokenizer = AutoTokenizer.from_pretrained(args.checkpoint)
+    model = AutoModelForCausalLM.from_pretrained(args.checkpoint)
 
     datasets = load_dataset("json", data_files={
         "train": "data/multiwoz/train/encoded.json",
@@ -97,7 +97,7 @@ def main(raw_args=None):
         num_train_epochs=args.num_train_epochs,
         report_to="mlflow",
         load_best_model_at_end=True,
-        save_total_limit = 5,
+        save_total_limit=5,
     )
 
     trainer = Trainer(
@@ -106,11 +106,12 @@ def main(raw_args=None):
         tokenizer=tokenizer,
         train_dataset=datasets["train"],
         eval_dataset=datasets["valid"],
-        callbacks = [EarlyStoppingCallback(early_stopping_patience=5)],
+        callbacks=[EarlyStoppingCallback(early_stopping_patience=5)],
     )
 
     trainer.train()
     trainer.save_model()
+
 
 if __name__ == "__main__":
     main()

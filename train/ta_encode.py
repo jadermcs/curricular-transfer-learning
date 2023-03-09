@@ -3,21 +3,13 @@
 import torch
 import argparse
 from itertools import chain
-from transformers import GPT2Tokenizer, GPT2LMHeadModel
+from transformers import AutoTokenizer, AutoModelForCausalLM
 from transformers import Trainer, TrainingArguments, EarlyStoppingCallback
 from datasets import load_dataset
 
 torch.manual_seed(0)
 SEED = 42
 
-def get_special_tokens():
-    base = ["<sos_u>", "<eos_u>", "<sos_b>", "<eos_b>",
-            "<sos_a>", "<eos_a>", "<sos_r>", "<eos_r>"]
-    with open("data/tripadvisor/schema.txt") as fin:
-        data = fin.readlines()
-    for value in data:
-        base.append("["+value+"]")
-    return base
 
 def main(raw_args=None):
     parser = argparse.ArgumentParser(description="Finetune a transformers "
@@ -47,8 +39,10 @@ def main(raw_args=None):
     parser.set_defaults(intent=False)
     args = parser.parse_args(raw_args)
 
-    tokenizer = GPT2Tokenizer.from_pretrained(args.checkpoint)
-    model = GPT2LMHeadModel.from_pretrained(args.checkpoint)
+    tokenizer = AutoTokenizer.from_pretrained(args.checkpoint)
+    model = AutoModelForCausalLM.from_pretrained(args.checkpoint)
+    tokenizer.pad_token = tokenizer.eos_token
+    model.resize_token_embeddings(len(tokenizer))
 
     if args.intent:
         datasets = load_dataset("json", data_files={
@@ -63,12 +57,6 @@ def main(raw_args=None):
 
     datasets = datasets.shuffle(seed=SEED)
     datasets["valid"] = datasets["valid"].select(range(5000))
-
-    special_tokens = get_special_tokens()
-
-    tokenizer.add_special_tokens({'additional_special_tokens': special_tokens})
-    tokenizer.pad_token = tokenizer.eos_token
-    model.resize_token_embeddings(len(tokenizer))
 
     def tokenizer_function(examples):
         res = tokenizer(examples["text"], truncation=True, padding="max_length",

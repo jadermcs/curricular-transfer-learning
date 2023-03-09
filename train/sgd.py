@@ -3,11 +3,12 @@
 import json
 import torch
 import argparse
-from transformers import GPT2Tokenizer, GPT2LMHeadModel
+from transformers import AutoTokenizer, AutoModelForCausalLM
 from transformers import Trainer, TrainingArguments
 from datasets import load_dataset
 
 torch.manual_seed(0)
+
 
 def get_special_tokens():
     base = ["<sos_u>", "<eos_u>", "<sos_b>", "<eos_b>", "<sos_r>", "<eos_r>"]
@@ -21,6 +22,7 @@ def get_special_tokens():
         for value in data[domain]["intents"]:
             base.append("["+value["name"]+"]")
     return base
+
 
 def main(raw_args=None):
     parser = argparse.ArgumentParser(description="Finetune a transformers "
@@ -47,8 +49,8 @@ def main(raw_args=None):
         help="Number of steps for the warmup in the lr scheduler.")
     args = parser.parse_args(raw_args)
 
-    tokenizer = GPT2Tokenizer.from_pretrained(args.checkpoint)
-    model = GPT2LMHeadModel.from_pretrained(args.checkpoint)
+    tokenizer = AutoTokenizer.from_pretrained(args.checkpoint)
+    model = AutoModelForCausalLM.from_pretrained(args.checkpoint)
 
     datasets = load_dataset("json", data_files={
         "train": "data/multiwoz/train/encoded.json",

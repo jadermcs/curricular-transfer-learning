@@ -3,12 +3,13 @@
 import torch
 import argparse
 from itertools import chain
-from transformers import GPT2Tokenizer, GPT2LMHeadModel
+from transformers import AutoTokenizer, AutoModelForCausalLM
 from transformers import Trainer, TrainingArguments, EarlyStoppingCallback
 from datasets import load_dataset
 
 torch.manual_seed(0)
 SEED = 42
+
 
 def main(raw_args=None):
     parser = argparse.ArgumentParser(description="Finetune a transformers "
@@ -35,9 +36,9 @@ def main(raw_args=None):
         help="Number of steps for the warmup in the lr scheduler.")
     args = parser.parse_args(raw_args)
 
-    tokenizer = GPT2Tokenizer.from_pretrained(args.checkpoint)
+    tokenizer = AutoTokenizer.from_pretrained(args.checkpoint)
+    model = AutoModelForCausalLM.from_pretrained(args.checkpoint)
     tokenizer.pad_token = tokenizer.eos_token
-    model = GPT2LMHeadModel.from_pretrained(args.checkpoint)
     model.resize_token_embeddings(len(tokenizer))
     datasets = load_dataset("json", data_files={
         "train": "data/tripadvisor/train/noencoded.json",
@@ -46,8 +47,6 @@ def main(raw_args=None):
 
     datasets = datasets.shuffle(seed=SEED)
     datasets["valid"] = datasets["valid"].select(range(5000))
-
-    column_names = datasets["train"].column_names
 
     def tokenizer_function(examples):
         output = tokenizer(examples["text"], truncation=True)
