@@ -11,6 +11,16 @@ torch.manual_seed(0)
 SEED = 42
 
 
+def get_special_tokens():
+    base = ["<sos_u>", "<eos_u>", "<sos_b>", "<eos_b>",
+            "<sos_a>", "<eos_a>", "<sos_r>", "<eos_r>"]
+    with open("data/multiwoz/tokens.txt") as fin:
+        data = fin.readlines()
+    for token in data:
+        base.append(token.strip())
+    return base
+
+
 def main(raw_args=None):
     parser = argparse.ArgumentParser(description="Finetune a transformers "
                                     "model on a causal language modeling task")
@@ -42,7 +52,6 @@ def main(raw_args=None):
     tokenizer = AutoTokenizer.from_pretrained(args.checkpoint)
     model = AutoModelForCausalLM.from_pretrained(args.checkpoint)
     tokenizer.pad_token = tokenizer.eos_token
-    model.resize_token_embeddings(len(tokenizer))
 
     if args.intent:
         datasets = load_dataset("json", data_files={
@@ -57,6 +66,12 @@ def main(raw_args=None):
 
     datasets = datasets.shuffle(seed=SEED)
     datasets["valid"] = datasets["valid"].select(range(5000))
+
+    special_tokens = get_special_tokens()
+
+    tokenizer.add_special_tokens({'additional_special_tokens': special_tokens})
+    tokenizer.pad_token = tokenizer.eos_token
+    model.resize_token_embeddings(len(tokenizer))
 
     def tokenizer_function(examples):
         res = tokenizer(examples["text"], truncation=True, padding="max_length",
@@ -79,7 +94,7 @@ def main(raw_args=None):
         if total_length >= args.token_length:
             total_length = (total_length // args.token_length) * args.token_length
         res = {
-            k: [t[i : i + args.token_length] for i in range(0, total_length, args.token_length)]
+            k: [t[i: i + args.token_length] for i in range(0, total_length, args.token_length)]
             for k, t in concatenated_examples.items()
         }
         res['labels'] = res['input_ids'].copy()
@@ -107,7 +122,10 @@ def main(raw_args=None):
         max_steps=args.max_steps,
         report_to="mlflow",
         load_best_model_at_end=True,
-        save_total_limit = 5,
+        save_total_limit=5,
+        gradient_checkpointing=True,
+        fp16=True,
+        optim="adafactor",  # TODO verify diff
     )
 
     trainer = Trainer(
@@ -116,11 +134,12 @@ def main(raw_args=None):
         tokenizer=tokenizer,
         train_dataset=datasets["train"],
         eval_dataset=datasets["valid"],
-        callbacks = [EarlyStoppingCallback(early_stopping_patience=5)],
+        callbacks=[EarlyStoppingCallback(early_stopping_patience=5)],
     )
 
     trainer.train()
     trainer.save_model()
+
 
 if __name__ == "__main__":
     main()

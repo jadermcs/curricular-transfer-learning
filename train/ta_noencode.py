@@ -39,7 +39,7 @@ def main(raw_args=None):
     tokenizer = AutoTokenizer.from_pretrained(args.checkpoint)
     model = AutoModelForCausalLM.from_pretrained(args.checkpoint)
     tokenizer.pad_token = tokenizer.eos_token
-    model.resize_token_embeddings(len(tokenizer))
+
     datasets = load_dataset("json", data_files={
         "train": "data/tripadvisor/train/noencoded.json",
         "valid": "data/tripadvisor/valid/noencoded.json"
@@ -96,7 +96,10 @@ def main(raw_args=None):
         max_steps=args.max_steps,
         report_to="mlflow",
         load_best_model_at_end=True,
-        save_total_limit = 5,
+        save_total_limit=5,
+        gradient_checkpointing=True,
+        fp16=True,
+        optim="adafactor",  # TODO verify diff
     )
 
     trainer = Trainer(
@@ -105,11 +108,12 @@ def main(raw_args=None):
         tokenizer=tokenizer,
         train_dataset=datasets["train"],
         eval_dataset=datasets["valid"],
-        callbacks = [EarlyStoppingCallback(early_stopping_patience=5)],
+        callbacks=[EarlyStoppingCallback(early_stopping_patience=5)],
     )
 
     trainer.train()
     trainer.save_model()
+
 
 if __name__ == "__main__":
     main()

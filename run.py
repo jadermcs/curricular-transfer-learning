@@ -18,14 +18,14 @@ GPT_LIST = [
 ]
 
 if __name__ == "__main__":
-    print("Processing tripadvisor...")
-    tripadvisor.main()
-    print("Processing tripadvisor (no label)...")
-    tripadvisor.main(label=False)
-    print("Processing tripadvisor (no encode)...")
-    tripadvisor_noencode.main()
-    print("Processing multiwoz...")
-    multiwoz.generate_encoded()
+    # print("Processing tripadvisor...")
+    # tripadvisor.main()
+    # print("Processing tripadvisor (no label)...")
+    # tripadvisor.main(label=False)
+    # print("Processing tripadvisor (no encode)...")
+    # tripadvisor_noencode.main()
+    # print("Processing multiwoz...")
+    # multiwoz.generate_encoded()
 
     for model_type, max_steps, BATCH_SIZE, GRAD_ACC, EPOCHS in GPT_LIST:
         # gpt-2 -> multiwoz

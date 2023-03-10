@@ -44,6 +44,7 @@ def main(raw_args=None):
 
     tokenizer = AutoTokenizer.from_pretrained(args.checkpoint)
     model = AutoModelForCausalLM.from_pretrained(args.checkpoint)
+    tokenizer.pad_token = tokenizer.eos_token
 
     datasets = load_dataset("json", data_files={
         "train": "data/multiwoz/train/encoded.json",
@@ -78,8 +79,8 @@ def main(raw_args=None):
     print("Tokenizing data.")
     datasets = datasets.map(
         tokenizer_function,
-        num_proc=4,
         batched=True,
+        num_proc=8,
         remove_columns=column_names,
     )
 
@@ -98,6 +99,9 @@ def main(raw_args=None):
         report_to="mlflow",
         load_best_model_at_end=True,
         save_total_limit=5,
+        gradient_checkpointing=True,
+        fp16=True,
+        optim="adafactor",  # TODO verify diff
     )
 
     trainer = Trainer(
