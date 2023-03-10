@@ -18,7 +18,7 @@ def main(raw_args=None):
     parser.add_argument("--checkpoint", type=str, required=True, help="A path for initial model.")
     parser.add_argument("--batch_size", type=int, default=8,
         help="Size of the batch.")
-    parser.add_argument("--token_length", type=int, default=512,
+    parser.add_argument("--token_length", type=int, default=256,
         help="Size of token sequence.")
     parser.add_argument("--train_file", type=str, default="data/process.train.json",
         help="A json file containing the training data.")
@@ -97,7 +97,7 @@ def main(raw_args=None):
         report_to="mlflow",
         load_best_model_at_end=True,
         save_total_limit=5,
-        gradient_checkpointing=True,
+        # gradient_checkpointing=True,
         fp16=True,
         optim="adafactor",  # TODO verify diff
     )

@@ -28,7 +28,7 @@ def main(raw_args=None):
     parser.add_argument("--percent", type=int, default=100, help="The subset of multiwoz to train.")
     parser.add_argument("--batch_size", type=int, default=8,
         help="Size of the batch.")
-    parser.add_argument("--token_length", type=int, default=512,
+    parser.add_argument("--token_length", type=int, default=256,
         help="Size of token sequence.")
     parser.add_argument("--learning_rate", type=float, default=2e-5,
         help="Initial learning rate to use.")
@@ -99,7 +99,7 @@ def main(raw_args=None):
         report_to="mlflow",
         load_best_model_at_end=True,
         save_total_limit=5,
-        gradient_checkpointing=True,
+        # gradient_checkpointing=True,
         fp16=True,
         optim="adafactor",  # TODO verify diff
     )
