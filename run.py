@@ -2,7 +2,7 @@ from train import mwoz, ta_encode, ta_noencode
 from utils import multiwoz, tripadvisor, tripadvisor_noencode
 from eval import main as main_eval
 
-TOKEN_LENGTH = "512"
+TOKEN_LENGTH = "256"
 
 
 FRACTION = [
@@ -14,7 +14,7 @@ GPT_LIST = [
     # ("gpt2", "60000", "16", "4", "200"),
     # ("gpt2-medium", "120000", "4", "16", "200"),
     # ("gpt2-large", "100000", "2", "32", "200"),
-    ("EleutherAI/pythia-1b-deduped", "100000", "8", "4", "200"),
+    ("EleutherAI/pythia-1b-deduped", "100000", "16", "2", "200"),
 ]
 
 if __name__ == "__main__":
