@@ -14,6 +14,8 @@ GPT_LIST = [
     # ("gpt2", "60000", "16", "4", "200"),
     # ("gpt2-medium", "120000", "4", "16", "200"),
     # ("gpt2-large", "100000", "2", "32", "200"),
+    ("EleutherAI/pythia-160m-deduped", "100000", "32", "1", "200"),
+    ("EleutherAI/pythia-410m-deduped", "100000", "32", "1", "200"),
     ("EleutherAI/pythia-1b-deduped", "100000", "16", "2", "200"),
 ]
 
