@@ -1,7 +1,7 @@
 import torch
 from tqdm import tqdm
 import numpy as np
-from transformers import GPT2Tokenizer, GPT2LMHeadModel
+from transformers import AutoTokenizer, AutoModelForCausalLM
 from datasets import load_dataset
 from utils.nlp import parse_state
 from mwzeval.metrics import Evaluator
@@ -36,7 +36,9 @@ def model_predict(model, tokenizer, device, datasets):
             state = {}
             gen = tokenizer.decode(gen)
             response = gen.split("<sos_r>")[-1].split("<eos_r>")[0].strip()
-            for k, v in parse_state(gen.split("<sos_b>")[-1].split("<eos_b>")[0].strip()):
+            parsed = gen.split("<sos_b>")[-1].split("<eos_b>")[0].strip()
+            parsed = parse_state(parsed)
+            for k, v in parsed:
                 try:
                     state[k] = v
                 except Exception as e:
@@ -93,18 +95,18 @@ def main():
 
     fout = open("metrics1.txt", "w")
     for path in models:
-        tokenizer = GPT2Tokenizer.from_pretrained(path, padding_side="left",
+        tokenizer = AutoTokenizer.from_pretrained(path, padding_side="left",
                                                   truncation_side="left")
-        model = GPT2LMHeadModel.from_pretrained(path)
+        model = AutoModelForCausalLM.from_pretrained(path)
         model.to(device)
 
         predicted = model_predict(model, tokenizer, device, datasets)
         e = Evaluator(bleu=True, success=True, richness=True)
         results = e.evaluate(predicted)
 
-        combined = results["bleu"]["mwz22"] + .5 *\
-                (results["success"]["inform"]["total"] +
+        basic = (results["success"]["inform"]["total"] +
                  results["success"]["success"]["total"])
+        combined = results["bleu"]["mwz22"] + .5 * basic
         print(path, file=fout)
         print(results["bleu"]["mwz22"], results["success"]["inform"]["total"],
               results["success"]["success"]["total"], combined, sep=" & ",
