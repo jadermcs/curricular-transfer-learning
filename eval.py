@@ -89,7 +89,7 @@ def main():
         "EleutherAI/pythia-410m-deduped",
         "EleutherAI/pythia-1b-deduped",
     ]
-    curriculums = ["", "ta_no_encode/", "ta_encode_nolabel/", "ta_encode/"]
+    curriculums = ["", "ta_noencode/", "ta_encode_nolabel/", "ta_encode/"]
     models = [f"models/{name}/{curriculum}multiwoz" for name in models for
               curriculum in curriculums]
 
