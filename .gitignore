@@ -1,4 +1,5 @@
 models/
+data/
 mlruns/
 cache/
 *.pdf
