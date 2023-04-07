@@ -85,9 +85,9 @@ def main():
     print(results)
 
     models = [
-        "EleutherAI/pythia-160m-deduped",
-        "EleutherAI/pythia-410m-deduped",
-        "EleutherAI/pythia-1b-deduped",
+        "gpt",
+        "gpt-medium",
+        "gpt-large",
     ]
     curriculums = ["", "ta_noencode/", "ta_encode_nolabel/", "ta_encode/"]
     models = [f"models/{name}/{curriculum}multiwoz" for name in models for
