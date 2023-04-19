@@ -49,7 +49,7 @@ def main(raw_args=None):
     datasets["valid"] = datasets["valid"].select(range(5000))
 
     def tokenizer_function(examples):
-        output = tokenizer(examples["text"], truncation=True)
+        output = tokenizer(examples["text"])
         return output
 
     column_names = datasets["train"].column_names

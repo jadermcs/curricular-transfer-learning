@@ -74,8 +74,7 @@ def main(raw_args=None):
     model.resize_token_embeddings(len(tokenizer))
 
     def tokenizer_function(examples):
-        res = tokenizer(examples["text"], truncation=True, padding="max_length",
-                        max_length=args.token_length)
+        res = tokenizer(examples["text"])
         return res
 
     column_names = datasets["train"].column_names
