@@ -124,7 +124,6 @@ def main(raw_args=None):
         save_total_limit=5,
         # gradient_checkpointing=True,
         fp16=True,
-        optim="adam",
     )
 
     trainer = Trainer(
