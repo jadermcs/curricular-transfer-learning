@@ -101,7 +101,6 @@ def main(raw_args=None):
         save_total_limit=5,
         # gradient_checkpointing=True,
         fp16=True,
-        optim="adafactor",  # TODO verify diff
     )
 
     trainer = Trainer(
