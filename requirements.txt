@@ -6,7 +6,6 @@ nltk>=3.7
 spacy>=3.2
 joblib
 mauve-text
-deepspeed
 accelerate
 mlflow
 matplotlib
