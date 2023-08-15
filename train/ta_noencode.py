@@ -98,7 +98,7 @@ def main(raw_args=None):
         load_best_model_at_end=True,
         save_total_limit=5,
         # gradient_checkpointing=True,
-        fp16=True,
+        # fp16=True,
     )
 
     trainer = Trainer(
