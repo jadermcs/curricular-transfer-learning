@@ -2,7 +2,7 @@ import logging
 import json
 import numpy as np
 from collections import OrderedDict
-import ontology
+from .ontology import all_acts, all_domains, all_slots
 
 
 def top_k_top_p_filtering(logits, top_k=0, top_p=0.0, filter_value=-float('Inf')):
@@ -94,13 +94,13 @@ class Vocab(object):
         if len(l) + len(self._idx2word) < self.vocab_size:
             logging.warning('actual label set smaller than that configured: {}/{}'
                             .format(len(l) + len(self._idx2word), self.vocab_size))
-        for word in ontology.all_domains + ['general']:
+        for word in all_domains + ['general']:
             word = '[' + word + ']'
             self._add_to_vocab(word)
-        for word in ontology.all_acts:
+        for word in all_acts:
             word = '[' + word + ']'
             self._add_to_vocab(word)
-        for word in ontology.all_slots:
+        for word in all_slots:
             self._add_to_vocab(word)
         for word in l:
             if word.startswith('[value_') and word.endswith(']'):

@@ -13,7 +13,6 @@ with open('utils/mapping.pair') as fin:
         tok_from, tok_to = line.replace('\n', '').split('\t')
         replacements.append((' ' + tok_from + ' ', ' ' + tok_to + ' '))
 
-
 def parse_state(belief):
     parse = []
     for intent in belief.split("[")[1:]:
@@ -28,6 +27,7 @@ def parse_state(belief):
                 pass
         parse.append((intent, slotsdict))
     return parse
+
 
 def insertSpace(token, text):
     sidx = 0

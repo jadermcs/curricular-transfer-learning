@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import re
-import ontology
+from .ontology import normlize_slot_names
 
 def my_clean_text(text):
     text = re.sub(r'([a-zT]+)\.([a-z])', r'\1 . \2', text)   # 'abc.xyz' -> 'abc . xyz'
@@ -301,6 +301,6 @@ def clean_slot_values(domain, slot, value):
             value = value.replace(".", ":")
     if value in ['dont care', "don't care", "do nt care", "doesn't care"]:
         value = "do n't care"
-    if ontology.normlize_slot_names.get(slot):
-        slot = ontology.normlize_slot_names[slot]
+    if normlize_slot_names.get(slot):
+        slot = normlize_slot_names[slot]
     return slot, value

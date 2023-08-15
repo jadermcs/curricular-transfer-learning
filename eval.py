@@ -4,22 +4,34 @@ import numpy as np
 from transformers import AutoTokenizer, AutoModelForCausalLM
 from datasets import load_dataset
 from utils.nlp import parse_state
+from utils.db_ops import MultiWozDB
 from mwzeval.metrics import Evaluator
 
 np.random.seed(42)
 sizencode = 512
 device = "cuda"
+device = "cpu"
+dbs = {
+    'attraction': 'data/db/attraction_db_processed.json',
+    'hospital': 'data/db/hospital_db_processed.json',
+    'hotel': 'data/db/hotel_db_processed.json',
+    'police': 'data/db/police_db_processed.json',
+    'restaurant': 'data/db/restaurant_db_processed.json',
+    'taxi': 'data/db/taxi_db_processed.json',
+    'train': 'data/db/train_db_processed.json',
+}
+mwozdb = MultiWozDB("data/db")
 
 
 def model_predict(model, tokenizer, device, datasets):
     predicted = {}
-    for batch in tqdm(datasets["test"]):
-        did = batch["id"].lower().rstrip(".json")
-        utterances = batch["text"].split("<sos_r>")
+    for dialog in tqdm(datasets["test"]):
+        did = dialog["id"].lower().rstrip(".json")
+        utterances = dialog["text"].split("<sos_b>")
         predicted[did] = []
         responses = []
         for i in range(len(utterances)-1):
-            example = "<sos_r>".join(utterances[:i+1])[-sizencode:]
+            example = "<sos_b>".join(utterances[:i+1])[-sizencode:]
             responses.append(example)
         encode = tokenizer(responses, return_tensors="pt", truncation=True,
                            padding=True, max_length=sizencode)
@@ -30,11 +42,15 @@ def model_predict(model, tokenizer, device, datasets):
                 max_new_tokens=80,
                 temperature=0.7,
                 pad_token_id=tokenizer.eos_token_id,
-                eos_token_id=tokenizer.encode("<eos_r>")[0]
+                eos_token_id=tokenizer.encode("<eos_b>")[0]
             )
         for gen in generate:
             state = {}
             gen = tokenizer.decode(gen)
+            gen = gen.split("<sos_b>")[-1].split("<eos_b>")[0].strip()
+            parsed = parse_state(gen)
+            print(parsed)
+            continue
             response = gen.split("<sos_r>")[-1].split("<eos_r>")[0].strip()
             parsed = gen.split("<sos_b>")[-1].split("<eos_b>")[0].strip()
             parsed = parse_state(parsed)
@@ -48,6 +64,7 @@ def model_predict(model, tokenizer, device, datasets):
                 "response": response,
                 "state": state,
             })
+        exit()
     return predicted
 
 
@@ -66,28 +83,10 @@ def main():
             "test": "data/multiwoz/test/encoded.json",
         })
 
-    predicted = {}
-
-    for d in datasets["test"]:
-        id = d["id"].rstrip(".json").lower()
-        turns = []
-        for belief in d["text"].split("<sos_b>")[1:]:
-            bs = parse_state(belief.split("<eos_b>")[0])
-            response = belief.split("<sos_r>")[1].split("<eos_r>")[0]
-            state = {"response": response, "state": {}}
-            for k, v in bs:
-                state["state"][k] = v
-            turns.append(state)
-        predicted[id] = turns
-
-    e = Evaluator(bleu=True, success=True, richness=True)
-    results = e.evaluate(predicted)
-    print(results)
-
     models = [
-        "gpt",
-        "gpt-medium",
-        "gpt-large",
+        "gpt2",
+        "gpt2-medium",
+        "gpt2-large",
     ]
     curriculums = ["", "ta_noencode/", "ta_encode_nolabel/", "ta_encode/"]
     models = [f"models/{name}/{curriculum}multiwoz" for name in models for
