@@ -27,25 +27,25 @@ if __name__ == "__main__":
 
     for model_type, max_steps, BATCH_SIZE, GRAD_ACC, EPOCHS in GPT_LIST:
         # gpt-2 -> multiwoz
-        mwoz.main([
-            "--directory", f"models/{model_type}/multiwoz",
-            "--checkpoint", f"{model_type}",
-            "--num_train_epochs", EPOCHS,
-            "--batch_size", BATCH_SIZE,
-            "--gradient_accumulation_steps", GRAD_ACC,
-            "--token_length", TOKEN_LENGTH,
-        ])
+        # mwoz.main([
+        #     "--directory", f"models/{model_type}/multiwoz",
+        #     "--checkpoint", f"{model_type}",
+        #     "--num_train_epochs", EPOCHS,
+        #     "--batch_size", BATCH_SIZE,
+        #     "--gradient_accumulation_steps", GRAD_ACC,
+        #     "--token_length", TOKEN_LENGTH,
+        # ])
 
         # gpt-2 -> tripadvisor (with transform and label)
-        ta_encode.main([
-                "--pseudo-intent",
-                "--directory", f"models/{model_type}/ta_encode",
-                "--checkpoint", f"{model_type}",
-                "--batch_size", BATCH_SIZE,
-                "--gradient_accumulation_steps", GRAD_ACC,
-                "--token_length", TOKEN_LENGTH,
-                "--max_steps", max_steps,
-        ])
+        # ta_encode.main([
+        #         "--pseudo-intent",
+        #         "--directory", f"models/{model_type}/ta_encode",
+        #         "--checkpoint", f"{model_type}",
+        #         "--batch_size", BATCH_SIZE,
+        #         "--gradient_accumulation_steps", GRAD_ACC,
+        #         "--token_length", TOKEN_LENGTH,
+        #         "--max_steps", max_steps,
+        # ])
 
         # gpt-2 -> tripadvisor (with transform no label)
         ta_encode.main([
