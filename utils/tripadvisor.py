@@ -8,6 +8,7 @@ from .nlp import normalize_trip
 
 random.seed(43)
 MSG_MAX_SIZE = 1000
+MSG_MIN_SIZE = 30
 
 def sequence_encode(dialogue, utt, label=True):
     encoded = ""
@@ -37,6 +38,8 @@ def main(label=True):
         for i, dialogue in enumerate(tqdm(data)):
             main = normalize_trip(dialogue["utterances"][0]["utterance"][:MSG_MAX_SIZE])
             for turn, utt in enumerate(dialogue["utterances"][1:50]):
+                if len(utt["utterance"]) < MSG_MIN_SIZE:
+                    continue
                 if utt["utterance"].startswith("This topic has been closed"):
                     continue
                 dialogue["main"] = main

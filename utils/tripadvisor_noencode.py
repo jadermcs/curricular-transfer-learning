@@ -8,6 +8,7 @@ from .nlp import normalize_trip
 
 random.seed(43)
 MSG_MAX_SIZE = 1000
+MSG_MIN_SIZE = 30
 
 def main():
     path = pathlib.Path("data/tripadvisor/")
@@ -27,6 +28,8 @@ def main():
         for i, dialogue in enumerate(tqdm(data)):
             encode = {"id": f"{i}", "text": ""}
             for utt in dialogue["utterances"][:50*2]:
+                if len(utt["utterance"]) < MSG_MIN_SIZE:
+                    continue
                 if utt["utterance"].startswith("This topic has been closed"):
                     continue
                 encode["text"] += " "+normalize_trip(utt["utterance"][:MSG_MAX_SIZE].lower())
