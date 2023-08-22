@@ -16,12 +16,12 @@ GPT_LIST = [
 ]
 
 if __name__ == "__main__":
-    # print("Processing tripadvisor...")
-    # tripadvisor.main()
-    # print("Processing tripadvisor (no label)...")
-    # tripadvisor.main(label=False)
-    # print("Processing tripadvisor (no encode)...")
-    # tripadvisor_noencode.main()
+    print("Processing tripadvisor...")
+    tripadvisor.main()
+    print("Processing tripadvisor (no label)...")
+    tripadvisor.main(label=False)
+    print("Processing tripadvisor (no encode)...")
+    tripadvisor_noencode.main()
     # print("Processing multiwoz...")
     # multiwoz.generate_encoded()
 
@@ -37,15 +37,15 @@ if __name__ == "__main__":
         # ])
 
         # gpt-2 -> tripadvisor (with transform and label)
-        # ta_encode.main([
-        #         "--pseudo-intent",
-        #         "--directory", f"models/{model_type}/ta_encode",
-        #         "--checkpoint", f"{model_type}",
-        #         "--batch_size", BATCH_SIZE,
-        #         "--gradient_accumulation_steps", GRAD_ACC,
-        #         "--token_length", TOKEN_LENGTH,
-        #         "--max_steps", max_steps,
-        # ])
+        ta_encode.main([
+                "--pseudo-intent",
+                "--directory", f"models/{model_type}/ta_encode",
+                "--checkpoint", f"{model_type}",
+                "--batch_size", BATCH_SIZE,
+                "--gradient_accumulation_steps", GRAD_ACC,
+                "--token_length", TOKEN_LENGTH,
+                "--max_steps", max_steps,
+        ])
 
         # gpt-2 -> tripadvisor (with transform no label)
         ta_encode.main([
