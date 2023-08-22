@@ -1,5 +1,4 @@
 import json
-import string
 import random
 import pathlib
 import numpy as np
@@ -10,14 +9,19 @@ random.seed(43)
 MSG_MAX_SIZE = 1000
 MSG_MIN_SIZE = 30
 
+
 def sequence_encode(dialogue, utt, label=True):
     encoded = ""
     encoded += "<sos_u>"+dialogue["main"]+"<eos_u>"
-    if label: encoded += "<sos_b>"+dialogue["domain"].split()[0].lower()+"<eos_b>"
-    else: encoded += "<sos_b> <eos_b>"
+    if label:
+        encoded += "<sos_b>"+dialogue["domain"].split()[0].lower()+"<eos_b>"
+    else:
+        encoded += "<sos_b> <eos_b>"
+    encoded += "<sos_db> <eos_db>"
     encoded += "<sos_a> <eos_a>"
     encoded += "<sos_r>"+normalize_trip(utt["utterance"][:MSG_MAX_SIZE])+"<eos_r>"
     return encoded
+
 
 def main(label=True):
     path = pathlib.Path("data/tripadvisor/")
