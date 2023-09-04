@@ -41,25 +41,25 @@ def main(label=True):
     with trainpath.open("w") as ftrain, validpath.open("w") as fvalid:
         for i, dialogue in enumerate(tqdm(data)):
             main = normalize_trip(dialogue["utterances"][0]["utterance"][:MSG_MAX_SIZE])
-            for turn, utt in enumerate(dialogue["utterances"][1:50]):
-                if len(utt["utterance"]) < MSG_MIN_SIZE:
-                    continue
-                if utt["utterance"].startswith("This topic has been closed"):
-                    continue
-                dialogue["main"] = main
-                encode = {
-                        "id": f"{i}-{turn}",
-                        "url": dialogue["url"],
-                        "text": sequence_encode(dialogue, utt, label),
-                        }
-                size = len(encode["text"])
-                sizes.append(len(encode["text"]))
-                if i % 9 != 0: ftrain.writelines(json.dumps(encode) + "\n")
-                else:          fvalid.writelines(json.dumps(encode) + "\n")
+            utt = dialogue["utterances"][1]
+            if len(utt["utterance"]) < MSG_MIN_SIZE:
+                continue
+            if utt["utterance"].startswith("This topic has been closed"):
+                continue
+            dialogue["main"] = main
+            encode = {
+                "id": f"{i}",
+                "url": dialogue["url"],
+                "text": sequence_encode(dialogue, utt, label),
+                }
+            sizes.append(len(encode["text"]))
+            if i % 9 != 0: ftrain.writelines(json.dumps(encode) + "\n")
+            else:          fvalid.writelines(json.dumps(encode) + "\n")
     print("Min:", np.min(sizes))
     print("Max:", np.max(sizes))
     print("Mean:", np.mean(sizes))
     print("Std:", np.std(sizes))
+
 
 if __name__ == "__main__":
     main()
