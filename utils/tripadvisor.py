@@ -40,6 +40,8 @@ def main(label=True):
     sizes = []
     with trainpath.open("w") as ftrain, validpath.open("w") as fvalid:
         for i, dialogue in enumerate(tqdm(data)):
+            if len(dialogue["utterances"]) < 2:
+                continue
             main = normalize_trip(dialogue["utterances"][0]["utterance"][:MSG_MAX_SIZE])
             utt = dialogue["utterances"][1]
             if len(utt["utterance"]) < MSG_MIN_SIZE:
