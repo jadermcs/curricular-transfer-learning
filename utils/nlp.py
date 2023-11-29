@@ -1,5 +1,6 @@
 import math
 import re
+import ftfy
 from collections import Counter
 
 from nltk.util import ngrams
@@ -133,6 +134,7 @@ def normalize(text):
 
 def normalize_trip(text):
     # lower case every word
+    text = ftfy.fix_text(text)
     text = text.lower()
     # remove urls
     text = re.sub(r'(https|http)?:\/\/(\w|\.|\/|\?|\=|\&|\%|\-)*\b', '', text, flags=re.MULTILINE)
