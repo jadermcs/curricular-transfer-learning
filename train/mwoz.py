@@ -61,6 +61,11 @@ def main(raw_args=None):
         model = PeftModel(args.checkpoint)
     else:
         model = AutoModelForCausalLM.from_pretrained(args.checkpoint)
+        peft_config = LoraConfig(
+            task_type=TaskType.CAUSAL_LM, inference_mode=False, r=16,
+            lora_alpha=16, lora_dropout=0.1, bias="all"
+        )
+        model = get_peft_model(model, peft_config)
     tokenizer.pad_token = tokenizer.eos_token
     tokenizer.add_special_tokens({'additional_special_tokens': special_tokens})
     tokenizer.pad_token = tokenizer.eos_token
