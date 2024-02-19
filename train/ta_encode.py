@@ -5,6 +5,7 @@ import argparse
 from itertools import chain
 from transformers import AutoTokenizer, AutoModelForCausalLM
 from transformers import Trainer, TrainingArguments, EarlyStoppingCallback
+from peft import get_peft_config, PeftModel, PeftConfig, get_peft_model, LoraConfig, TaskType
 from datasets import load_dataset
 
 torch.manual_seed(0)
@@ -49,9 +50,6 @@ def main(raw_args=None):
     parser.set_defaults(intent=False)
     args = parser.parse_args(raw_args)
 
-    tokenizer = AutoTokenizer.from_pretrained(args.checkpoint)
-    model = AutoModelForCausalLM.from_pretrained(args.checkpoint)
-    tokenizer.pad_token = tokenizer.eos_token
 
     if args.intent:
         datasets = load_dataset("json", data_files={
@@ -69,9 +67,17 @@ def main(raw_args=None):
 
     special_tokens = get_special_tokens()
 
+    tokenizer = AutoTokenizer.from_pretrained(args.checkpoint)
+    model = AutoModelForCausalLM.from_pretrained(args.checkpoint)
+    tokenizer.pad_token = tokenizer.eos_token
     tokenizer.add_special_tokens({'additional_special_tokens': special_tokens})
     tokenizer.pad_token = tokenizer.eos_token
     model.resize_token_embeddings(len(tokenizer))
+    peft_config = LoraConfig(
+        task_type=TaskType.CAUSAL_LM, inference_mode=False, r=16,
+        lora_alpha=16, lora_dropout=0.1, bias="all"
+    )
+    model = get_peft_model(model, peft_config)
 
     def tokenizer_function(examples):
         res = tokenizer(examples["text"])

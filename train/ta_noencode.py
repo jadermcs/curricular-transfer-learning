@@ -5,6 +5,7 @@ import argparse
 from itertools import chain
 from transformers import AutoTokenizer, AutoModelForCausalLM
 from transformers import Trainer, TrainingArguments, EarlyStoppingCallback
+from peft import get_peft_config, PeftModel, PeftConfig, get_peft_model, LoraConfig, TaskType
 from datasets import load_dataset
 
 torch.manual_seed(0)
@@ -36,9 +37,6 @@ def main(raw_args=None):
         help="Number of steps for the warmup in the lr scheduler.")
     args = parser.parse_args(raw_args)
 
-    tokenizer = AutoTokenizer.from_pretrained(args.checkpoint)
-    model = AutoModelForCausalLM.from_pretrained(args.checkpoint)
-    tokenizer.pad_token = tokenizer.eos_token
 
     datasets = load_dataset("json", data_files={
         "train": "data/tripadvisor/train/noencoded.json",
@@ -48,9 +46,18 @@ def main(raw_args=None):
     datasets = datasets.shuffle(seed=SEED)
     datasets["valid"] = datasets["valid"].select(range(5000))
 
+    tokenizer = AutoTokenizer.from_pretrained(args.checkpoint)
+    model = AutoModelForCausalLM.from_pretrained(args.checkpoint)
+    tokenizer.pad_token = tokenizer.eos_token
+    peft_config = LoraConfig(
+        task_type=TaskType.CAUSAL_LM, inference_mode=False, r=16,
+        lora_alpha=16, lora_dropout=0.1, bias="all"
+    )
+    model = get_peft_model(model, peft_config)
+
     def tokenizer_function(examples):
-        output = tokenizer(examples["text"])
-        return output
+        res = tokenizer(examples["text"])
+        return res
 
     column_names = datasets["train"].column_names
 
@@ -68,7 +75,7 @@ def main(raw_args=None):
         if total_length >= args.token_length:
             total_length = (total_length // args.token_length) * args.token_length
         res = {
-            k: [t[i : i + args.token_length] for i in range(0, total_length, args.token_length)]
+            k: [t[i: i + args.token_length] for i in range(0, total_length, args.token_length)]
             for k, t in concatenated_examples.items()
         }
         res['labels'] = res['input_ids'].copy()

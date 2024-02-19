@@ -4,6 +4,7 @@ import torch
 import argparse
 from transformers import AutoTokenizer, AutoModelForCausalLM
 from transformers import Trainer, TrainingArguments, EarlyStoppingCallback
+from peft import get_peft_config, PeftModel, PeftConfig, get_peft_model, LoraConfig, TaskType
 from datasets import load_dataset
 
 torch.manual_seed(0)
@@ -42,10 +43,6 @@ def main(raw_args=None):
         help="Number of steps for the warmup in the lr scheduler.")
     args = parser.parse_args(raw_args)
 
-    tokenizer = AutoTokenizer.from_pretrained(args.checkpoint)
-    model = AutoModelForCausalLM.from_pretrained(args.checkpoint)
-    tokenizer.pad_token = tokenizer.eos_token
-
     datasets = load_dataset("json", data_files={
         "train": "data/multiwoz/train/encoded.json",
         "valid": "data/multiwoz/dev/encoded.json",
@@ -59,6 +56,12 @@ def main(raw_args=None):
 
     special_tokens = get_special_tokens()
 
+    tokenizer = AutoTokenizer.from_pretrained(args.checkpoint)
+    if args.checkpoint.startswith("models"):
+        model = PeftModel(args.checkpoint)
+    else:
+        model = AutoModelForCausalLM.from_pretrained(args.checkpoint)
+    tokenizer.pad_token = tokenizer.eos_token
     tokenizer.add_special_tokens({'additional_special_tokens': special_tokens})
     tokenizer.pad_token = tokenizer.eos_token
     model.resize_token_embeddings(len(tokenizer))
