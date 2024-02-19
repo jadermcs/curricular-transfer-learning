@@ -66,6 +66,7 @@ def main(raw_args=None):
             lora_alpha=16, lora_dropout=0.1, bias="all"
         )
         model = get_peft_model(model, peft_config)
+    model.print_trainable_parameters()
     tokenizer.pad_token = tokenizer.eos_token
     tokenizer.add_special_tokens({'additional_special_tokens': special_tokens})
     tokenizer.pad_token = tokenizer.eos_token

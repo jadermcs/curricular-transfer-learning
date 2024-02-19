@@ -1,6 +1,6 @@
 from train import mwoz, ta_encode, ta_noencode
 from utils import multiwoz, tripadvisor, tripadvisor_noencode
-# from eval import main as main_eval
+from eval import main as main_eval
 
 TOKEN_LENGTH = "256"
 
@@ -10,31 +10,31 @@ FRACTION = [
 ]
 
 GPT_LIST = [
-    # ("distilgpt2", "60000", "32", "2", "200"),
+    ("distilgpt2", "60000", "32", "2", "200"),
     # ("gpt2-medium", "120000", "16", "4", "200"),
-    ("gpt2-large", "120000", "4", "16", "200"),
+    # ("gpt2-large", "120000", "4", "16", "200"),
 ]
 
 if __name__ == "__main__":
     print("Processing tripadvisor...")
-    tripadvisor.main()
+    # tripadvisor.main()
     print("Processing tripadvisor (no label)...")
-    tripadvisor.main(label=False)
+    # tripadvisor.main(label=False)
     print("Processing tripadvisor (no encode)...")
-    tripadvisor_noencode.main()
-    # print("Processing multiwoz...")
+    # tripadvisor_noencode.main()
+    print("Processing multiwoz...")
     # multiwoz.generate_encoded()
 
     for model_type, max_steps, BATCH_SIZE, GRAD_ACC, EPOCHS in GPT_LIST:
         # gpt-2 -> multiwoz
-        # mwoz.main([
-        #     "--directory", f"models/{model_type}/multiwoz",
-        #     "--checkpoint", f"{model_type}",
-        #     "--num_train_epochs", EPOCHS,
-        #     "--batch_size", BATCH_SIZE,
-        #     "--gradient_accumulation_steps", GRAD_ACC,
-        #     "--token_length", TOKEN_LENGTH,
-        # ])
+        mwoz.main([
+            "--directory", f"models/{model_type}/multiwoz",
+            "--checkpoint", f"{model_type}",
+            "--num_train_epochs", EPOCHS,
+            "--batch_size", BATCH_SIZE,
+            "--gradient_accumulation_steps", GRAD_ACC,
+            "--token_length", TOKEN_LENGTH,
+        ])
 
         # gpt-2 -> tripadvisor (with transform and label)
         ta_encode.main([
@@ -68,15 +68,15 @@ if __name__ == "__main__":
         ])
 
         # gpt-2 -> tripadvisor (both) -> multiwoz
-        # for encode in ["encode", "noencode", "encode_nolabel"]:
-        #     mwoz.main([
-        #         "--directory", f"models/{model_type}/ta_{encode}/multiwoz",
-        #         "--checkpoint", f"models/{model_type}/ta_{encode}",
-        #         "--num_train_epochs", EPOCHS,
-        #         "--batch_size", BATCH_SIZE,
-        #         "--gradient_accumulation_steps", GRAD_ACC,
-        #         "--token_length", TOKEN_LENGTH,
-        #     ])
+        for encode in ["encode", "noencode", "encode_nolabel"]:
+            mwoz.main([
+                "--directory", f"models/{model_type}/ta_{encode}/multiwoz",
+                "--checkpoint", f"models/{model_type}/ta_{encode}",
+                "--num_train_epochs", EPOCHS,
+                "--batch_size", BATCH_SIZE,
+                "--gradient_accumulation_steps", GRAD_ACC,
+                "--token_length", TOKEN_LENGTH,
+            ])
 
         # gpt-2 -> multiwoz (low resource setting)
         # for frac in FRACTION:
@@ -103,4 +103,5 @@ if __name__ == "__main__":
         #             "--percent", frac,
         #         ])
     # run evaluation
-    # main_eval()
+    print("Evaluation...")
+    main_eval()
