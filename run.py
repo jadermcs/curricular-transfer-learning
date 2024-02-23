@@ -1,6 +1,6 @@
 from train import mwoz, ta_encode, ta_noencode
 from utils import multiwoz, tripadvisor, tripadvisor_noencode
-from eval import main as main_eval
+# from eval import main as main_eval
 
 TOKEN_LENGTH = "256"
 
