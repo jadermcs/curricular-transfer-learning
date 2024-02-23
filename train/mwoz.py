@@ -58,7 +58,8 @@ def main(raw_args=None):
 
     tokenizer = AutoTokenizer.from_pretrained(args.checkpoint)
     if args.checkpoint.startswith("models"):
-        model = PeftModel(args.checkpoint)
+        model = AutoModelForCausalLM.from_pretrained(args.checkpoint)
+        model = PeftModel(model, args.checkpoint)
     else:
         model = AutoModelForCausalLM.from_pretrained(args.checkpoint)
         peft_config = LoraConfig(
